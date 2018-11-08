@@ -9,9 +9,12 @@ import paramiko
 import time
 import datetime
 import os
+import sys
 
-t = time.localtime(time.time())
-timespit = str(1000000000 * int(time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00', t),'%Y-%m-%d %H:%M:%S'))))
+reload(sys)
+sys.setdefaultencoding('utf-8') 
+
+timespit = str(1000000000 * int(time.mktime(time.strptime(str(datetime.date.today()), '%Y-%m-%d'))))
 
 jk002ip,jk002username = '10.1.52.1','root'
 
@@ -46,13 +49,14 @@ def jk002SSH(ip,username,cmd,stdoutfile):
     except Exception,e:
         print e
 
-def CallbackOut(num,cmd,ip,username):    
+def CallbackOut(num,cmd,ip,username,rplcment):    
     callbackLogFile = open("./CallBack_ArchiveDailyLog","a")
     callbackLogFile.seek(0)
     callbackLogFile.truncate()
     while num < 15:
         cmdfile = open('./jk002_ArchiveCmd','r')
         projcmd = cmdfile.readlines()[num]
+        projcmd = projcmd.replace('timespit',rplcment)
         for i in projcmd.strip():
             cmd += i
         print cmd
@@ -62,4 +66,4 @@ def CallbackOut(num,cmd,ip,username):
         print 'Stdout OK!'
     print 'Done!'
 
-CallbackOut(cmdline,sshcommand,jk002ip,jk002username)
+CallbackOut(cmdline,sshcommand,jk002ip,jk002username,timespit)

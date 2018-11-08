@@ -7,11 +7,14 @@
 
 import paramiko
 import time
-import datetime
 import os
+import sys 
+import datetime
 
-t = time.localtime(time.time())
-timespit = str(1000000000 * int(time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00', t),'%Y-%m-%d %H:%M:%S'))))
+reload(sys)
+sys.setdefaultencoding('utf-8') 
+
+timespit = str(1000000000 * int(time.mktime(time.strptime(str(datetime.date.today()), '%Y-%m-%d'))))
 
 jk002ip,jk002username = '10.1.52.1','root'
 
@@ -37,6 +40,7 @@ def jk002SSH(ip,username,cmd,stdoutfile):
         stdin,stdout,stderr = ssh_client.exec_command(cmd,get_pty=True)                  ##运行需要的查询指令
         ##在command命令最后加上 get_pty=True，执行多条命令 的话用；隔开，另外所有命令都在一个大的单引号范围内引用
         ##std_in.write('PWD'+'\n') #执行输入命令，输入sudo命令的密码，会自动执行
+        ##stdout.encode('gb2312')
         for line in stdout:
             line = line.strip() ##删除换行符，防止出现空行
             char = line         ##变量分离
@@ -46,13 +50,14 @@ def jk002SSH(ip,username,cmd,stdoutfile):
     except Exception,e:
         print e
 
-def CallbackOut(num,cmd,ip,username):    
-    callbackLogFile = open("./CallBack_daily_log","a")
+def CallbackOut(num,cmd,ip,username,rplcment):    
+    callbackLogFile = open("./CallBack_BackupDailyLog","a")
     callbackLogFile.seek(0)
     callbackLogFile.truncate()
     while num < 15:
-        cmdfile = open('./jk002INFCMD','r')
+        cmdfile = open('./jk002_BackipCmd','r')
         projcmd = cmdfile.readlines()[num]
+        projcmd = projcmd.replace('timespit',rplcment)
         for i in projcmd.strip():
             cmd += i
         print cmd
@@ -62,4 +67,4 @@ def CallbackOut(num,cmd,ip,username):
         print 'Stdout OK!'
     print 'Done!'
 
-CallbackOut(cmdline,sshcommand,jk002ip,jk002username)
+CallbackOut(cmdline,sshcommand,jk002ip,jk002username,timespit)
