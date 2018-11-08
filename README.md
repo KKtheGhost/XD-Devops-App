@@ -2,6 +2,11 @@
 
 ### Summary
 
+- Requirement
+  
+Paramiko for python
+    `sudo pip install paramiko`
+
 - Purpose
 
 This project is established to automatically deal with the Daily issues.
