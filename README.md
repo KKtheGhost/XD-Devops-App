@@ -5,7 +5,8 @@
 - Requirement
   
 Paramiko for python
-    `sudo pip install paramiko`
+
+    ```sudo pip install paramiko```
 
 - Purpose
 
