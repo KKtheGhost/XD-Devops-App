@@ -55,7 +55,7 @@ def CallbackOut(num,cmd,ip,username,rplcment):
     callbackLogFile.seek(0)
     callbackLogFile.truncate()
     while num < 15:
-        cmdfile = open('./jk002_BackipCmd','r')
+        cmdfile = open('./jk002_BackupCmd','r')
         projcmd = cmdfile.readlines()[num]
         projcmd = projcmd.replace('timespit',rplcment)
         for i in projcmd.strip():
