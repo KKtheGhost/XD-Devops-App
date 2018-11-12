@@ -7,6 +7,10 @@
 
 import paramiko
 import metrics
-import os
-import re
+import sys
+import commands
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+def UploadHWInfo():
