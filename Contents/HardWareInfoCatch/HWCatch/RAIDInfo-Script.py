@@ -31,7 +31,7 @@ def GetRAID(ip,username,cmd):
             char = line        
             print >> stdoutfile,char   
        ssh_client.close()            
-    except Exception,e:
+    except Exception,e:             ##需要添加相关的信息筛选策略，明天的目标
        print e
 
 def InvokeHost():

@@ -1,0 +1,15 @@
+# READ THIS BEFORE YOU REFACTOR ME
+#
+# Mainly I don't commit referFunctions. There is no shame using open source vai DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE.
+# Afterwards, there might be some trash files in ./test folder,they will also not be committed.
+# Have fun coding.
+
+*.refer
+*/*.refer
+*/**/*.refer
+*/**/**/*.refer
+*/**/**/**/*.refer
+*/**/**/**/**/*.refer
+*/**/**/**/*.test
+*/**/**/**/**/*.test
+[0-9]*
