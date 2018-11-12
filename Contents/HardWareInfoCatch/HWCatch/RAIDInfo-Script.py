@@ -34,5 +34,14 @@ def GetRAID(ip,username,cmd):
     except Exception,e:
        print e
 
+def InvokeHost():
+    count = 1
+    HostList = open('./ServerHost.conf',"r")
+    while count < (((len(HostList.readlines()))/4) + 1):
+        ipline = count * 4
+        userline = ipline + 1
+        ip,username = HostList.readlines(ipline),HostList.readlines(userline)
+        GetRAID(ip,username,CliCheck)
+        count += 1
 
-GetRAID(ip,username,CliCheck)
+InvokeHost()     
