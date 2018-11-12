@@ -12,5 +12,3 @@ import commands
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
-def UploadHWInfo():
