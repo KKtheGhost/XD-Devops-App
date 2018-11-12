@@ -1,241 +1,243 @@
-name: backup
-time                failed project rdsname success total
-----                ------ ------- ------- ------- -----
-1541694025000000000 0      ro      [测试服]   2       2
-1541695960000000000 0      ro      [正式服]   4       4
-1541715625000000000 0      ro      [测试服]   2       2
-1541717539000000000 0      ro      [正式服]   4       4
-name: backup
-time                failed project rdsname success total
-----                ------ ------- ------- ------- -----
-1541728211000000000 0      xdapp   shrd001 69      69
-name: backup
-time                failed project rdsname success total
-----                ------ ------- ------- ------- -----
-1541698465000000000 0      xxd     53x102  4       4
-1541703061000000000 0      xxd     53x110  675     675
-1541706865000000000 0      xxd     53x102  674     674
-1541710599000000000 0      xxd     53x112  1245    1245
-1541711657000000000 0      xxd     53x108  1113    1113
-1541711857000000000 0      xxd     53x106  1128    1128
-1541712857000000000 0      xxd     53x104  1114    1114
-name: backup
-time                failed project rdsname                success total
-----                ------ ------- -------                ------- -----
-1541692814000000000 0      zzwg    [rm-uf6adwe8i98hd65ze] 1       1
-1541692819000000000 0      zzwg    [rm-uf61lbio781t2w550] 1       1
-1541692821000000000 0      zzwg    [rm-uf683t45it239ha0m] 1       1
-1541692824000000000 0      zzwg    [rm-uf601gx4k5p02ax3y] 1       1
-1541692827000000000 0      zzwg    [rm-uf679vd8l00ng2v1q] 1       1
-1541692829000000000 0      zzwg    [rm-uf66j8soe03btj48d] 1       1
-name: backup
-time                failed project rdsname                success total
-----                ------ ------- -------                ------- -----
-1541692818000000000 0      iw      [rm-2ze90e7063l1q4k51] 1       1
-1541692820000000000 0      iw      [rm-2ze750hmje067i4pf] 1       1
-1541692823000000000 0      iw      [rm-2zesha7m428107l58] 1       1
-1541692825000000000 0      iw      [rm-2ze7819c93ab127j7] 1       1
-1541692834000000000 0      iw      [rm-2ze467295k0b26g5d] 1       1
-1541692836000000000 0      iw      [rm-2zej2uqbn90q15s5x] 1       1
-name: backup
-time                failed project    rdsname      success total
-----                ------ -------    -------      ------- -----
-1541692874000000000 0      sxd-binlog 8x033.xd.com 1       1
-1541692879000000000 0      sxd-binlog 8x161.xd.com 1       1
-1541692882000000000 0      sxd-binlog 8x155.xd.com 1       1
-1541692884000000000 0      sxd-binlog 8x113.xd.com 1       1
-1541692887000000000 0      sxd-binlog 8x083.xd.com 1       1
-1541692888000000000 0      sxd-binlog 8x087.xd.com 1       1
-1541692891000000000 0      sxd-binlog 8x108.xd.com 1       1
-1541692896000000000 0      sxd-binlog 8x072.xd.com 1       1
-1541692956000000000 0      sxd-binlog 8x109.xd.com 1       1
-1541692958000000000 0      sxd-binlog 8x102.xd.com 1       1
-1541692959000000000 0      sxd-binlog 8x094.xd.com 1       1
-1541692963000000000 0      sxd-binlog 8x105.xd.com 1       1
-1541692967000000000 0      sxd-binlog 8x101.xd.com 1       1
-1541692972000000000 0      sxd-binlog 8x195.xd.com 1       1
-1541692982000000000 0      sxd-binlog 8x110.xd.com 1       1
-1541693005000000000 0      sxd-binlog 8x075.xd.com 1       1
-1541696479000000000 0      sxd-binlog 8x066.xd.com 1       1
-1541696480000000000 0      sxd-binlog 8x074.xd.com 1       1
-1541696481000000000 0      sxd-binlog 8x170.xd.com 1       1
-1541696483000000000 0      sxd-binlog 8x107.xd.com 1       1
-1541696485000000000 0      sxd-binlog 8x192.xd.com 1       1
-1541696486000000000 0      sxd-binlog 8x103.xd.com 1       1
-1541696491000000000 0      sxd-binlog 8x167.xd.com 1       1
-1541696501000000000 0      sxd-binlog 8x087.xd.com 1       1
-1541696553000000000 0      sxd-binlog 8x104.xd.com 1       1
-1541696554000000000 0      sxd-binlog 8x141.xd.com 1       1
-1541696558000000000 0      sxd-binlog 8x062.xd.com 1       1
-1541696565000000000 0      sxd-binlog 8x194.xd.com 1       1
-1541696570000000000 0      sxd-binlog 8x068.xd.com 1       1
-1541696580000000000 0      sxd-binlog 8x063.xd.com 1       1
-1541696584000000000 0      sxd-binlog 8x096.xd.com 1       1
-1541696627000000000 0      sxd-binlog 8x065.xd.com 1       1
-1541696630000000000 0      sxd-binlog 8x097.xd.com 1       1
-1541696634000000000 0      sxd-binlog 8x163.xd.com 1       1
-1541696640000000000 0      sxd-binlog 8x242.xd.com 1       1
-1541696643000000000 0      sxd-binlog 8x099.xd.com 1       1
-1541696660000000000 0      sxd-binlog 8x160.xd.com 1       1
-1541696692000000000 0      sxd-binlog 8x114.xd.com 1       1
-1541696697000000000 0      sxd-binlog 8x069.xd.com 1       1
-1541696701000000000 0      sxd-binlog 8x193.xd.com 1       1
-1541696703000000000 0      sxd-binlog 8x070.xd.com 1       1
-1541696704000000000 0      sxd-binlog 8x073.xd.com 1       1
-1541700096000000000 0      sxd-binlog 8x092.xd.com 1       1
-1541700097000000000 0      sxd-binlog 8x064.xd.com 1       1
-1541700098000000000 0      sxd-binlog 8x195.xd.com 1       1
-1541700099000000000 0      sxd-binlog 8x071.xd.com 1       1
-1541700100000000000 0      sxd-binlog 8x090.xd.com 1       1
-1541700101000000000 0      sxd-binlog 8x067.xd.com 1       1
-1541700103000000000 0      sxd-binlog 8x093.xd.com 1       1
-1541700104000000000 0      sxd-binlog 8x098.xd.com 1       1
-1541703698000000000 0      sxd-binlog 8x039.xd.com 1       1
-1541703699000000000 0      sxd-binlog 8x051.xd.com 1       1
-1541703700000000000 0      sxd-binlog 8x070.xd.com 1       1
-1541703701000000000 0      sxd-binlog 8x111.xd.com 1       1
-1541703702000000000 0      sxd-binlog 8x100.xd.com 1       1
-1541703704000000000 0      sxd-binlog 8x240.xd.com 1       1
-1541703788000000000 0      sxd-binlog 8x112.xd.com 1       1
-1541703790000000000 0      sxd-binlog 8x169.xd.com 1       1
-1541703791000000000 0      sxd-binlog 8x167.xd.com 1       1
-1541703792000000000 0      sxd-binlog 8x075.xd.com 1       1
-1541703794000000000 0      sxd-binlog 8x154.xd.com 1       1
-1541707301000000000 0      sxd-binlog 8x173.xd.com 1       1
-1541707302000000000 0      sxd-binlog 8x105.xd.com 1       1
-1541707303000000000 0      sxd-binlog 8x165.xd.com 1       1
-1541707304000000000 0      sxd-binlog 8x168.xd.com 1       1
-1541707305000000000 0      sxd-binlog 8x164.xd.com 1       1
-1541707306000000000 0      sxd-binlog 8x091.xd.com 1       1
-1541707308000000000 0      sxd-binlog 8x087.xd.com 1       1
-1541707372000000000 0      sxd-binlog 8x106.xd.com 1       1
-1541710877000000000 0      sxd-binlog 8x055.xd.com 1       1
-1541710878000000000 0      sxd-binlog 8x063.xd.com 1       1
-1541710879000000000 0      sxd-binlog 8x101.xd.com 1       1
-1541710884000000000 0      sxd-binlog 8x061.xd.com 1       1
-1541710891000000000 0      sxd-binlog 8x167.xd.com 1       1
-1541710892000000000 0      sxd-binlog 8x172.xd.com 1       1
-1541714475000000000 0      sxd-binlog 8x092.xd.com 1       1
-1541714482000000000 0      sxd-binlog 8x109.xd.com 1       1
-1541714486000000000 0      sxd-binlog 8x108.xd.com 1       1
-1541714488000000000 0      sxd-binlog 8x171.xd.com 1       1
-1541714489000000000 0      sxd-binlog 8x113.xd.com 1       1
-1541714494000000000 0      sxd-binlog 8x110.xd.com 1       1
-1541714496000000000 0      sxd-binlog 8x156.xd.com 1       1
-1541714543000000000 0      sxd-binlog 8x107.xd.com 1       1
-1541714547000000000 0      sxd-binlog 8x073.xd.com 1       1
-1541714552000000000 0      sxd-binlog 8x162.xd.com 1       1
-1541718023000000000 1      sxd-binlog 8x154.xd.com 0       1
-1541718080000000000 0      sxd-binlog 8x104.xd.com 1       1
-1541718082000000000 0      sxd-binlog 8x069.xd.com 1       1
-1541718084000000000 0      sxd-binlog 8x065.xd.com 1       1
-1541718086000000000 0      sxd-binlog 8x094.xd.com 1       1
-1541718103000000000 0      sxd-binlog 8x072.xd.com 1       1
-1541718137000000000 0      sxd-binlog 8x031.xd.com 1       1
-1541718142000000000 0      sxd-binlog 8x080.xd.com 1       1
-1541718143000000000 0      sxd-binlog 8x114.xd.com 1       1
-1541721622000000000 1      sxd-binlog 8x154.xd.com 0       1
-1541721679000000000 0      sxd-binlog 8x074.xd.com 1       1
-1541721681000000000 0      sxd-binlog 8x195.xd.com 1       1
-1541721684000000000 0      sxd-binlog 8x067.xd.com 1       1
-1541721686000000000 0      sxd-binlog 8x087.xd.com 1       1
-1541721699000000000 0      sxd-binlog 8x084.xd.com 1       1
-1541721702000000000 0      sxd-binlog 8x103.xd.com 1       1
-1541721745000000000 0      sxd-binlog 8x194.xd.com 1       1
-1541721746000000000 0      sxd-binlog 8x082.xd.com 1       1
-1541721748000000000 0      sxd-binlog 8x238.xd.com 1       1
-1541721750000000000 0      sxd-binlog 8x099.xd.com 1       1
-1541721753000000000 0      sxd-binlog 8x096.xd.com 1       1
-1541725277000000000 0      sxd-binlog 8x083.xd.com 1       1
-1541725280000000000 0      sxd-binlog 8x086.xd.com 1       1
-1541725282000000000 0      sxd-binlog 8x098.xd.com 1       1
-1541725283000000000 0      sxd-binlog 8x123.xd.com 1       1
-1541725286000000000 0      sxd-binlog 8x085.xd.com 1       1
-1541725300000000000 1      sxd-binlog 8x154.xd.com 0       1
-1541725312000000000 0      sxd-binlog 8x112.xd.com 1       1
-1541725341000000000 0      sxd-binlog 8x093.xd.com 1       1
-1541725344000000000 0      sxd-binlog 8x075.xd.com 1       1
-1541725349000000000 0      sxd-binlog 8x090.xd.com 1       1
-1541725354000000000 0      sxd-binlog 8x064.xd.com 1       1
-1541728875000000000 0      sxd-binlog 8x035.xd.com 1       1
-1541728879000000000 0      sxd-binlog 8x170.xd.com 1       1
-1541728885000000000 0      sxd-binlog 8x105.xd.com 1       1
-1541728886000000000 0      sxd-binlog 8x161.xd.com 1       1
-1541728887000000000 0      sxd-binlog 8x091.xd.com 1       1
-1541728889000000000 0      sxd-binlog 8x111.xd.com 1       1
-1541728892000000000 0      sxd-binlog 8x102.xd.com 1       1
-1541728893000000000 0      sxd-binlog 8x160.xd.com 1       1
-1541728919000000000 0      sxd-binlog 8x154.xd.com 1       1
-1541728960000000000 0      sxd-binlog 8x095.xd.com 1       1
-1541728962000000000 0      sxd-binlog 8x193.xd.com 1       1
-1541728968000000000 0      sxd-binlog 8x061.xd.com 1       1
-1541728969000000000 0      sxd-binlog 8x100.xd.com 1       1
-1541728970000000000 0      sxd-binlog 8x063.xd.com 1       1
-1541728973000000000 0      sxd-binlog 8x167.xd.com 1       1
-1541728984000000000 0      sxd-binlog 8x069.xd.com 1       1
-name: backup
-time                failed project rdsname                success total
-----                ------ ------- -------                ------- -----
-1541692814000000000 0      xcpd    [rm-uf6ofye35v36z2mjm] 1       1
-1541692819000000000 0      xcpd    [rm-uf6jdk9iu290b1rwk] 1       1
-1541692822000000000 0      xcpd    [rm-uf6fb1a1353m962of] 1       1
-1541692824000000000 0      xcpd    [rm-uf69o48raq97855a4] 1       1
-1541692827000000000 0      xcpd    [rm-uf6k8x4k89z71f736] 1       1
-1541692831000000000 0      xcpd    [rm-uf6h8624zrk5i2g26] 1       1
-1541692837000000000 0      xcpd    [rm-uf6u7271dw3v9i6hr] 1       1
-1541692840000000000 0      xcpd    [rm-uf6li332ovdg52cxw] 1       1
-1541692845000000000 0      xcpd    [rm-uf66m2qflwdu22448] 1       1
-1541692849000000000 0      xcpd    [rm-uf61x8qp46ym6vowu] 1       1
-1541692852000000000 0      xcpd    [rm-uf66072wgqm05t6i0] 1       1
-name: backup
-time                failed project rdsname                           success total
-----                ------ ------- -------                           ------- -----
-1541692802000000000 0      yunwei  aruba/daning-aruba-20181109_0000  1       1
-1541692804000000000 0      yunwei  n7k/daning-N7K-20181109_0000.cfg  1       1
-1541692809000000000 0      yunwei  N7K/jxq-B07-N7K-20181109_0000.cfg 1       1
-name: backup
-time                failed project rdsname         success total
-----                ------ ------- -------         ------- -----
-1541704847000000000 0      sssg    rdserrjq2fvzuqm 34      34
-1541705280000000000 0      sssg    rdsujnj32ujnj32 37      37
-1541705459000000000 0      sssg    rdsiz6jmyqenvmn 45      45
-1541705488000000000 0      sssg    rdsm2ii7vm2ii7v 15      15
-1541706238000000000 0      sssg    rdsqu7vumrqm6je 65      65
-1541706513000000000 0      sssg    rdsqyvuja2qnzja 65      65
-1541707164000000000 0      sssg    rdsanrarjae6j2e 44      44
-1541707286000000000 0      sssg    rdsezfqq3ezfqq3 90      90
-1541707490000000000 0      sssg    rdsafqzzfeby3qm 31      31
-1541709189000000000 0      sssg    rdsrnmfrnrnmfrn 241     241
-1541711358000000000 0      sssg    rds3ubrqfzjeere 27      27
-name: backup
-time                failed project rdsname success total
-----                ------ ------- ------- ------- -----
-1541698255000000000 0      hsqj    shrd013 1       1
-1541698603000000000 0      hsqj    shrd012 74      74
-1541698611000000000 0      hsqj    shrd011 81      81
-1541698679000000000 0      hsqj    shrd010 82      82
-1541698858000000000 0      hsqj    shrd007 85      85
-1541698909000000000 0      hsqj    shrd006 81      81
-1541698917000000000 0      hsqj    shrd004 84      84
-1541698928000000000 0      hsqj    shrd008 79      79
-1541698990000000000 0      hsqj    shrd003 91      91
-1541699537000000000 0      hsqj    shrd001 125     125
-name: backup
-time                failed project rdsname              success total
-----                ------ ------- -------              ------- -----
-1541713353000000000 0      sglms   rm-2zex420663179rsq0 29      29
-1541714004000000000 0      sglms   rm-2ze7iu8yru07kgieg 17      17
-name: backup
-time                failed project rdsname                success total
-----                ------ ------- -------                ------- -----
-1541692813000000000 0      hczz    [rm-2zesye9251v7ii463] 1       1
-1541692814000000000 0      hczz    [rm-2ze6dh448nlnk4r9c] 1       1
-name: backup
-time                failed project rdsname success total
-----                ------ ------- ------- ------- -----
-1541706200000000000 0      xxd2    53x114  475     475
-1541708212000000000 0      xxd2    53x208  958     958
-1541709656000000000 0      xxd2    53x210  949     949
-1541710130000000000 0      xxd2    53x202  835     835
-1541711283000000000 0      xxd2    53x206  864     864
-1541711309000000000 0      xxd2    53x204  857     857
+------ ------- ------- ------- -----
+0      ro      [测试服]   2       2
+0      ro      [正式服]   4       4
+0      ro      [测试服]   2       2
+0      ro      [正式服]   4       4
+------ ------- ------- ------- -----
+0      xdapp   shrd001 69      69
+------ ------- ------- ------- -----
+0      xxd     53x102  4       4
+0      xxd     53x110  675     675
+0      xxd     53x102  674     674
+0      xxd     53x112  1245    1245
+0      xxd     53x108  1114    1114
+0      xxd     53x106  1129    1129
+0      xxd     53x104  1114    1114
+------ ------- -------                ------- -----
+0      zzwg    [rm-uf6adwe8i98hd65ze] 1       1
+0      zzwg    [rm-uf61lbio781t2w550] 1       1
+0      zzwg    [rm-uf683t45it239ha0m] 1       1
+0      zzwg    [rm-uf601gx4k5p02ax3y] 1       1
+0      zzwg    [rm-uf679vd8l00ng2v1q] 1       1
+0      zzwg    [rm-uf66j8soe03btj48d] 1       1
+------ ------- -------                ------- -----
+0      iw      [rm-2ze90e7063l1q4k51] 1       1
+0      iw      [rm-2ze750hmje067i4pf] 1       1
+0      iw      [rm-2zesha7m428107l58] 1       1
+0      iw      [rm-2ze7819c93ab127j7] 1       1
+0      iw      [rm-2ze467295k0b26g5d] 1       1
+0      iw      [rm-2zej2uqbn90q15s5x] 1       1
+------ -------    -------      ------- -----
+0      sxd-binlog 8x135.xd.com 1       1
+0      sxd-binlog 8x094.xd.com 1       1
+0      sxd-binlog 8x065.xd.com 1       1
+0      sxd-binlog 8x168.xd.com 1       1
+0      sxd-binlog 8x096.xd.com 1       1
+0      sxd-binlog 8x087.xd.com 1       1
+0      sxd-binlog 8x106.xd.com 1       1
+0      sxd-binlog 8x071.xd.com 1       1
+0      sxd-binlog 8x088.xd.com 1       1
+0      sxd-binlog 8x192.xd.com 1       1
+0      sxd-binlog 8x110.xd.com 1       1
+0      sxd-binlog 8x114.xd.com 1       1
+0      sxd-binlog 8x195.xd.com 1       1
+0      sxd-binlog 8x064.xd.com 1       1
+0      sxd-binlog 8x035.xd.com 1       1
+0      sxd-binlog 8x075.xd.com 1       1
+0      sxd-binlog 8x073.xd.com 1       1
+0      sxd-binlog 8x159.xd.com 1       1
+0      sxd-binlog 8x109.xd.com 1       1
+0      sxd-binlog 8x100.xd.com 1       1
+0      sxd-binlog 8x095.xd.com 1       1
+0      sxd-binlog 8x127.xd.com 1       1
+0      sxd-binlog 8x172.xd.com 1       1
+0      sxd-binlog 8x144.xd.com 1       1
+0      sxd-binlog 8x105.xd.com 1       1
+0      sxd-binlog 8x240.xd.com 1       1
+0      sxd-binlog 8x085.xd.com 1       1
+0      sxd-binlog 8x063.xd.com 1       1
+0      sxd-binlog 8x069.xd.com 1       1
+0      sxd-binlog 8x173.xd.com 1       1
+0      sxd-binlog 8x089.xd.com 1       1
+0      sxd-binlog 8x070.xd.com 1       1
+0      sxd-binlog 8x087.xd.com 1       1
+0      sxd-binlog 8x167.xd.com 1       1
+0      sxd-binlog 8x107.xd.com 1       1
+0      sxd-binlog 8x113.xd.com 1       1
+0      sxd-binlog 8x097.xd.com 1       1
+0      sxd-binlog 8x167.xd.com 1       1
+0      sxd-binlog 8x102.xd.com 1       1
+0      sxd-binlog 8x108.xd.com 1       1
+0      sxd-binlog 8x086.xd.com 1       1
+0      sxd-binlog 8x104.xd.com 1       1
+0      sxd-binlog 8x167.xd.com 1       1
+0      sxd-binlog 8x170.xd.com 1       1
+0      sxd-binlog 8x082.xd.com 1       1
+0      sxd-binlog 8x195.xd.com 1       1
+0      sxd-binlog 8x074.xd.com 1       1
+0      sxd-binlog 8x157.xd.com 1       1
+0      sxd-binlog 8x160.xd.com 1       1
+0      sxd-binlog 8x194.xd.com 1       1
+0      sxd-binlog 8x092.xd.com 1       1
+0      sxd-binlog 8x066.xd.com 1       1
+0      sxd-binlog 8x068.xd.com 1       1
+0      sxd-binlog 8x039.xd.com 1       1
+0      sxd-binlog 8x067.xd.com 1       1
+0      sxd-binlog 8x090.xd.com 1       1
+0      sxd-binlog 8x080.xd.com 1       1
+0      sxd-binlog 8x096.xd.com 1       1
+0      sxd-binlog 8x112.xd.com 1       1
+0      sxd-binlog 8x084.xd.com 1       1
+0      sxd-binlog 8x095.xd.com 1       1
+0      sxd-binlog 8x106.xd.com 1       1
+0      sxd-binlog 8x057.xd.com 1       1
+0      sxd-binlog 8x110.xd.com 1       1
+0      sxd-binlog 8x103.xd.com 1       1
+0      sxd-binlog 8x165.xd.com 1       1
+0      sxd-binlog 8x072.xd.com 1       1
+0      sxd-binlog 8x114.xd.com 1       1
+0      sxd-binlog 8x093.xd.com 1       1
+0      sxd-binlog 8x195.xd.com 1       1
+0      sxd-binlog 8x163.xd.com 1       1
+0      sxd-binlog 8x195.xd.com 1       1
+0      sxd-binlog 8x167.xd.com 1       1
+0      sxd-binlog 8x131.xd.com 1       1
+0      sxd-binlog 8x171.xd.com 1       1
+0      sxd-binlog 8x094.xd.com 1       1
+0      sxd-binlog 8x162.xd.com 1       1
+0      sxd-binlog 8x071.xd.com 1       1
+0      sxd-binlog 8x091.xd.com 1       1
+0      sxd-binlog 8x155.xd.com 1       1
+0      sxd-binlog 8x065.xd.com 1       1
+0      sxd-binlog 8x102.xd.com 1       1
+0      sxd-binlog 8x172.xd.com 1       1
+0      sxd-binlog 8x100.xd.com 1       1
+0      sxd-binlog 8x055.xd.com 1       1
+0      sxd-binlog 8x109.xd.com 1       1
+0      sxd-binlog 8x192.xd.com 1       1
+0      sxd-binlog 8x154.xd.com 1       1
+0      sxd-binlog 8x104.xd.com 1       1
+0      sxd-binlog 8x156.xd.com 1       1
+0      sxd-binlog 8x097.xd.com 1       1
+0      sxd-binlog 8x062.xd.com 1       1
+0      sxd-binlog 8x098.xd.com 1       1
+0      sxd-binlog 8x167.xd.com 1       1
+0      sxd-binlog 8x068.xd.com 1       1
+0      sxd-binlog 8x113.xd.com 1       1
+0      sxd-binlog 8x173.xd.com 1       1
+0      sxd-binlog 8x161.xd.com 1       1
+0      sxd-binlog 8x066.xd.com 1       1
+0      sxd-binlog 8x075.xd.com 1       1
+0      sxd-binlog 8x099.xd.com 1       1
+0      sxd-binlog 8x195.xd.com 1       1
+0      sxd-binlog 8x092.xd.com 1       1
+0      sxd-binlog 8x107.xd.com 1       1
+0      sxd-binlog 8x095.xd.com 1       1
+0      sxd-binlog 8x111.xd.com 1       1
+0      sxd-binlog 8x074.xd.com 1       1
+0      sxd-binlog 8x194.xd.com 1       1
+0      sxd-binlog 8x086.xd.com 1       1
+0      sxd-binlog 8x087.xd.com 1       1
+0      sxd-binlog 8x031.xd.com 1       1
+0      sxd-binlog 8x096.xd.com 1       1
+0      sxd-binlog 8x083.xd.com 1       1
+0      sxd-binlog 8x114.xd.com 1       1
+0      sxd-binlog 8x080.xd.com 1       1
+0      sxd-binlog 8x108.xd.com 1       1
+0      sxd-binlog 8x073.xd.com 1       1
+0      sxd-binlog 8x037.xd.com 1       1
+0      sxd-binlog 8x244.xd.com 1       1
+0      sxd-binlog 8x129.xd.com 1       1
+0      sxd-binlog 8x070.xd.com 1       1
+0      sxd-binlog 8x133.xd.com 1       1
+0      sxd-binlog 8x094.xd.com 1       1
+0      sxd-binlog 8x072.xd.com 1       1
+0      sxd-binlog 8x157.xd.com 1       1
+0      sxd-binlog 8x170.xd.com 1       1
+0      sxd-binlog 8x065.xd.com 1       1
+0      sxd-binlog 8x137.xd.com 1       1
+0      sxd-binlog 8x089.xd.com 1       1
+0      sxd-binlog 8x090.xd.com 1       1
+0      sxd-binlog 8x062.xd.com 1       1
+0      sxd-binlog 8x071.xd.com 1       1
+0      sxd-binlog 8x169.xd.com 1       1
+0      sxd-binlog 8x093.xd.com 1       1
+0      sxd-binlog 8x069.xd.com 1       1
+0      sxd-binlog 8x103.xd.com 1       1
+0      sxd-binlog 8x238.xd.com 1       1
+0      sxd-binlog 8x082.xd.com 1       1
+0      sxd-binlog 8x106.xd.com 1       1
+0      sxd-binlog 8x160.xd.com 1       1
+0      sxd-binlog 8x141.xd.com 1       1
+0      sxd-binlog 8x109.xd.com 1       1
+0      sxd-binlog 8x107.xd.com 1       1
+0      sxd-binlog 8x167.xd.com 1       1
+0      sxd-binlog 8x095.xd.com 1       1
+0      sxd-binlog 8x084.xd.com 1       1
+0      sxd-binlog 8x193.xd.com 1       1
+0      sxd-binlog 8x101.xd.com 1       1
+0      sxd-binlog 8x061.xd.com 1       1
+0      sxd-binlog 8x164.xd.com 1       1
+0      sxd-binlog 8x162.xd.com 1       1
+0      sxd-binlog 8x099.xd.com 1       1
+0      sxd-binlog 8x102.xd.com 1       1
+0      sxd-binlog 8x153.xd.com 1       1
+0      sxd-binlog 8x123.xd.com 1       1
+0      sxd-binlog 8x195.xd.com 1       1
+0      sxd-binlog 8x091.xd.com 1       1
+0      sxd-binlog 8x087.xd.com 1       1
+0      sxd-binlog 8x105.xd.com 1       1
+0      sxd-binlog 8x104.xd.com 1       1
+0      sxd-binlog 8x063.xd.com 1       1
+------ ------- -------                ------- -----
+0      xcpd    [rm-uf6ofye35v36z2mjm] 1       1
+0      xcpd    [rm-uf6jdk9iu290b1rwk] 1       1
+0      xcpd    [rm-uf6fb1a1353m962of] 1       1
+0      xcpd    [rm-uf69o48raq97855a4] 1       1
+0      xcpd    [rm-uf6k8x4k89z71f736] 1       1
+0      xcpd    [rm-uf6h8624zrk5i2g26] 1       1
+0      xcpd    [rm-uf6u7271dw3v9i6hr] 1       1
+0      xcpd    [rm-uf6li332ovdg52cxw] 1       1
+0      xcpd    [rm-uf66m2qflwdu22448] 1       1
+0      xcpd    [rm-uf61x8qp46ym6vowu] 1       1
+0      xcpd    [rm-uf66072wgqm05t6i0] 1       1
+------ ------- -------                              ------- -----
+0      yunwei  n7k/daning-N7K-20181112_0000.cfg     1       1
+0      yunwei  N7K/jxq-B07-N7K-20181112_0000.cfg    1       1
+------ ------- -------         ------- -----
+0      sssg    rdserrjq2fvzuqm 34      34
+0      sssg    rdsujnj32ujnj32 37      37
+0      sssg    rdsiz6jmyqenvmn 45      45
+0      sssg    rdsm2ii7vm2ii7v 15      15
+0      sssg    rdsqu7vumrqm6je 65      65
+0      sssg    rdsqyvuja2qnzja 65      65
+0      sssg    rdsanrarjae6j2e 44      44
+0      sssg    rdsezfqq3ezfqq3 90      90
+0      sssg    rdsafqzzfeby3qm 31      31
+0      sssg    rdsrnmfrnrnmfrn 246     246
+0      sssg    rds3ubrqfzjeere 27      27
+------ ------- ------- ------- -----
+0      hsqj    shrd013 1       1
+0      hsqj    shrd011 81      81
+0      hsqj    shrd012 74      74
+0      hsqj    shrd010 82      82
+0      hsqj    shrd007 85      85
+0      hsqj    shrd006 81      81
+0      hsqj    shrd004 84      84
+0      hsqj    shrd005 95      95
+0      hsqj    shrd008 79      79
+0      hsqj    shrd003 91      91
+0      hsqj    shrd001 125     125
+------ ------- -------              ------- -----
+0      sglms   rm-2zex420663179rsq0 29      29
+0      sglms   rm-2ze7iu8yru07kgieg 17      17
+------ ------- -------                ------- -----
+0      hczz    [rm-2zesye9251v7ii463] 1       1
+0      hczz    [rm-2ze6dh448nlnk4r9c] 1       1
+------ ------- ------- ------- -----
+0      xxd2    53x114  476     476
+0      xxd2    53x208  958     958
+0      xxd2    53x210  950     950
+0      xxd2    53x202  835     835
+0      xxd2    53x206  864     864
+0      xxd2    53x204  857     857

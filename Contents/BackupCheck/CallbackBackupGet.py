@@ -42,11 +42,15 @@ def jk002SSH(ip,username,cmd,stdoutfile):
         ##std_in.write('PWD'+'\n') #执行输入命令，输入sudo命令的密码，会自动执行
         ##stdout.encode('gb2312')
         for line in stdout:
-            line = line.strip() ##删除换行符，防止出现空行
-            char = line         ##变量分离
-            print >> stdoutfile,char       ##输出到文件："./CallBack_daily_log"
-            ## callbackLogFile.write(stdout.read())
-        ssh_client.close()                      ##完成操作，关闭ssh_client
+            line = line.strip() 
+            if 'backup' in line:
+                continue
+            elif 'time' in line:
+                continue
+            else:
+                char = line[20:]        
+                print >> stdoutfile,char   
+        ssh_client.close()            
     except Exception,e:
         print e
 
@@ -60,11 +64,33 @@ def CallbackOut(num,cmd,ip,username,rplcment):
         projcmd = projcmd.replace('timespit',rplcment)
         for i in projcmd.strip():
             cmd += i
-        print cmd
+        ## print cmd
         jk002SSH(ip,username,cmd,callbackLogFile)
         num += 1
         cmd = ''
-        print 'Stdout OK!'
+        ## print 'Stdout OK!'
     print 'Done!'
 
+def CompareError():
+    BackupStatus = 1
+    TodayLog = open("./CallBack_BackupDailyLog","r")
+    StandardLog = open("./STD_BackupLog","r")
+    TodayLogLines = TodayLog.readlines()
+    StandardLogLines = StandardLog.readlines()
+    for stdline in StandardLogLines:
+        res = 0
+        for line in TodayLogLines:
+            if line == stdline:
+                res += 1
+            else:
+                continue
+        if res == 0:
+            print stdline
+            BackupStatus += 1
+    if BackupStatus == 1:
+        print 'Backup Status OK!'
+    else:
+        print 'Errors are listed above.'
+
 CallbackOut(cmdline,sshcommand,jk002ip,jk002username,timespit)
+CompareError()
