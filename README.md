@@ -7,6 +7,8 @@
 Paramiko for python
 
     ```sudo pip install paramiko```
+    ```Refer from some HW Info catching functions```
+    ```Abandoned to use Spider Tools```
 
 - Purpose
 
