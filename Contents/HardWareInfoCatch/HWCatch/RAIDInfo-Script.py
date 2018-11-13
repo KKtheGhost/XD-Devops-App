@@ -7,12 +7,13 @@
 
 import paramiko
 import sys
+import linecache
+import os
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 CliCheck = '/opt/MegaRAID/MegaCli/MegaCli64 -PDList -A0|grep -iE \'slot|error|Non Coerced\''
-ip,username = '10.1.54.185','root'
 
 def GetRAID(ip,username,cmd):
     stdoutfile = open("./Temporary_RAID_INFO","a")
@@ -50,15 +51,13 @@ def ErrorGet(project):
         linenum += 4
 
 count = 1
-def GetServerInfo(count):
-    hostfile = open("./ServerHost.conf","r")
-    ip = (hostfile.readline()[count * 4]).strip()
-    username = (hostfile.readline()[count * 4 + 1]).strip()
-    project = (hostfile.readline()[count * 4 + 2]).strip()
-    while 4 * count < (len(hostfile.readlines())):
-        ip = hostfile.readline()[count * 4].strip()
-        username = hostfile.readline()[count * 4 + 1].strip()
-        project = hostfile.readline()[count * 4 + 2].strip()
+def GetServerInfo(num):
+    hostfile = open("./ServerHost","rU")
+    ipnum,usernum,projnum = num*4,num*4+1,num*4+2
+    while num*4 < (len(hostfile.readlines())):
+        ip = (linecache.getline("./ServerHost",ipnum))[10:]
+        username = (linecache.getline("./ServerHost",usernum))[10:]
+        project = (linecache.getline("./ServerHost",projnum))[10:]
         GetRAID(ip,username,CliCheck)
         ErrorGet(project)
 
