@@ -12,7 +12,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 CliCheck = '/opt/MegaRAID/MegaCli/MegaCli64 -PDList -A0|grep -iE \'slot|error|Non Coerced\''
-ip,username = '10.1.54.185','root'
+# ip,username = '10.1.54.185','root'
 
 def GetRAID(ip,username,cmd):
     stdoutfile = open("./Temporary_RAID_INFO","a")
@@ -27,11 +27,21 @@ def GetRAID(ip,username,cmd):
        stdin,stdout,stderr = ssh_client.exec_command(cmd,get_pty=True)
        for line in stdout:
             line = line.strip()
-            #if 'Error' in line:
+            ## if 'Error' in line:
             char = line        
             print >> stdoutfile,char   
        ssh_client.close()            
     except Exception,e:             ##需要添加相关的信息筛选策略，明天的目标
        print e
 
-GetRAID(ip,username,CliCheck)
+def InvokeHost():
+    count = 1
+    HostList = open('./ServerHost.conf',"r")
+    while count < (((len(HostList.readlines()))/4) + 1):
+        ipline = count * 4
+        userline = ipline + 1
+        ip,username = HostList.readlines(ipline),HostList.readlines(userline)
+        GetRAID(ip,username,CliCheck)
+        count += 1
+
+InvokeHost()     
