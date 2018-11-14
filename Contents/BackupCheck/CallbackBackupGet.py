@@ -58,7 +58,7 @@ def CallbackOut(num,cmd,ip,username,rplcment):
     callbackLogFile = open("./CallBack_BackupDailyLog","a")
     callbackLogFile.seek(0)
     callbackLogFile.truncate()
-    while num < 15:
+    while num < 14:
         cmdfile = open('./jk002_BackupCmd','r')
         projcmd = cmdfile.readlines()[num]
         projcmd = projcmd.replace('timespit',rplcment)

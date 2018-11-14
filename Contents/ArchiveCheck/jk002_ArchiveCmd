@@ -4,7 +4,6 @@ influx -username admin -password influxdb -database xd_callback -execute "SELECT
 influx -username admin -password influxdb -database xd_callback -execute "SELECT * FROM archive WHERE time>timespit AND project='zzwg'"
 influx -username admin -password influxdb -database xd_callback -execute "SELECT * FROM archive WHERE time>timespit AND project='iw'"
 influx -username admin -password influxdb -database xd_callback -execute "SELECT * FROM archive WHERE time>timespit AND project='js'"
-influx -username admin -password influxdb -database xd_callback -execute "SELECT * FROM archive WHERE time>timespit AND project='sxd-binlog'"
 influx -username admin -password influxdb -database xd_callback -execute "SELECT * FROM archive WHERE time>timespit AND project='xcpd'"
 influx -username admin -password influxdb -database xd_callback -execute "SELECT * FROM archive WHERE time>timespit AND project='yunwei'"
 influx -username admin -password influxdb -database xd_callback -execute "SELECT * FROM archive WHERE time>timespit AND project='sssg'"

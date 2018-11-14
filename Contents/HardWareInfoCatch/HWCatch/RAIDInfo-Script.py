@@ -6,12 +6,12 @@
 #@Version : 0.1.0
 
 import paramiko
-import sys
+# import sys
 import linecache
 import os
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+## reload(sys)
+## sys.setdefaultencoding('utf-8')
 
 CliCheck = '/opt/MegaRAID/MegaCli/MegaCli64 -PDList -A0|grep -iE \'slot|error|Non Coerced\''
 
@@ -28,9 +28,9 @@ def GetRAID(ip,username,cmd):
        stdin,stdout,stderr = ssh_client.exec_command(cmd,get_pty=True)
        for line in stdout:
             line = line.strip()
-            if 'Error' in line:
-                char = line        
-                print >> stdoutfile,char   
+            ## if 'Error' in line:
+            char = line        
+            print >> stdoutfile,char   
        ssh_client.close()            
     except Exception,e:             ##需要添加相关的信息筛选策略，明天的目标
        print e
@@ -47,7 +47,7 @@ def ErrorGet(project):
         if eline1[19:20] == '0' and eline2[19:20] == '0':
             continue
         else:
-            print elineslot + elinesize >> ''
+            print elineslot + elinesize >> errorout
         linenum += 4
 
 count = 1
@@ -55,9 +55,9 @@ def GetServerInfo(num):
     hostfile = open("./ServerHost","rU")
     ipnum,usernum,projnum = num*4,num*4+1,num*4+2
     while num*4 < (len(hostfile.readlines())):
-        ip = (linecache.getline("./ServerHost",ipnum))[10:]
-        username = (linecache.getline("./ServerHost",usernum))[10:]
-        project = (linecache.getline("./ServerHost",projnum))[10:]
+        ip = ((linecache.getline("./ServerHost",ipnum))[10:]).strip()
+        username = ((linecache.getline("./ServerHost",usernum))[10:]).strip()
+        project = ((linecache.getline("./ServerHost",projnum))[10:]).strip()
         GetRAID(ip,username,CliCheck)
         ErrorGet(project)
 
