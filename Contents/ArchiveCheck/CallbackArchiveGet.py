@@ -39,8 +39,8 @@ def jk002SSH(ip,username,cmd,stdoutfile):
 
 def CompareError(project):
     ArchiveStatus = 0
-    TodayLog = open("./CallBack_ArchiveDailyLog","r")
-    StandardLog = open("./STD_ArchiveLog","r")
+    TodayLog = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/CallBack_ArchiveDailyLog","r")
+    StandardLog = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/STD_ArchiveLog","r")
     TodayLogLines = TodayLog.readlines()
     StandardLogLines = StandardLog.readlines()
     StandardLogProj,ErrorLine = [],[]
@@ -56,18 +56,18 @@ def CompareError(project):
         print 'There is ' + str(ArchiveStatus) + ' errors of ' + project + ' in Archive today. The error RDSserver is ' + ErrorLine 
 
 def CallbackOut(num,cmd,ip,username): 
-    timespit = str(1000000000 * int(time.mktime(time.strptime(str(datetime.date.today()), '%Y-%m-%d'))))   
-    callbackLogFile = open("./CallBack_ArchiveDailyLog","a")
+    timespit = str(1000000000 * int(time.mktime(time.strptime(str(datetime.date.today()), '%Y-%m-%d'))))
+    callbackLogFile = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/CallBack_ArchiveDailyLog","a")
     callbackLogFile.seek(0)
     callbackLogFile.truncate()
     while num < 14:
-        cmdfile = open('./jk002_ArchiveCmd','r')
+        cmdfile = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/jk002_ArchiveCmd','r')
         projcmd = cmdfile.readlines()[num]
         projcmd = projcmd.replace('timespit',timespit)
         for i in projcmd.strip():
             cmd += i
         jk002SSH(ip,username,cmd,callbackLogFile)
-        project = ((open('../ProjList','r').readlines()[num]).strip())[10:]
+        project = ((open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ProjList','r').readlines()[num]).strip())[10:]
         num += 1
         cmd = ''
         CompareError(project)

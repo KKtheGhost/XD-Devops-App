@@ -39,8 +39,8 @@ def jk002SSH(ip,username,cmd,stdoutfile):
 
 def CompareError(project):
     BackupStatus = 0
-    TodayLog = open("./CallBack_BackupDailyLog","r")
-    StandardLog = open("./STD_BackupLog","r")
+    TodayLog = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/BackupCheck/CallBack_BackupDailyLog","r")
+    StandardLog = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/BackupCheck/STD_BackupLog","r")
     TodayLogLines = TodayLog.readlines()
     StandardLogLines = StandardLog.readlines()
     StandardLogProj,ErrorLine = [],[]
@@ -57,17 +57,17 @@ def CompareError(project):
 
 def CallbackOut(num,cmd,ip,username):
     timespit = str(1000000000 * int(time.mktime(time.strptime(str(datetime.date.today()), '%Y-%m-%d'))))     
-    callbackLogFile = open("./CallBack_BackupDailyLog","a")
+    callbackLogFile = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/BackupCheck/CallBack_BackupDailyLog","a")
     callbackLogFile.seek(0)
     callbackLogFile.truncate()
     while num < 14:
-        cmdfile = open('./jk002_BackupCmd','r')
+        cmdfile = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/BackupCheck/jk002_BackupCmd','r')
         projcmd = cmdfile.readlines()[num]
         projcmd = projcmd.replace('timespit',timespit)
         for i in projcmd.strip():
             cmd += i
         jk002SSH(ip,username,cmd,callbackLogFile)
-        project = ((open('../ProjList','r').readlines()[num]).strip())[10:]
+        project = ((open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ProjList','r').readlines()[num]).strip())[10:]
         num += 1
         cmd = ''
         CompareError(project)
