@@ -14,13 +14,6 @@ import datetime
 reload(sys)
 sys.setdefaultencoding('utf-8') 
 
-timespit = str(1000000000 * int(time.mktime(time.strptime(str(datetime.date.today()), '%Y-%m-%d'))))
-
-jk002ip,jk002username = '10.1.52.1','root'
-
-cmdline = 0
-sshcommand = ''
-
 ## def INFCommand(cmd):
 ##     cmdfile = open('./jk002INFCMD','r')
 ##     projcmd = cmdfile.readlines()[cmdline]
@@ -47,12 +40,32 @@ def jk002SSH(ip,username,cmd,stdoutfile):
                 continue
             elif 'time' in line:
                 continue
+            elif '----' in line:
+                continue
             else:
                 char = line[20:]        
                 print >> stdoutfile,char   
         ssh_client.close()            
     except Exception,e:
         print e
+
+def CompareError(project):
+    BackupStatus = 0
+    TodayLog = open("./CallBack_BackupDailyLog","r")
+    StandardLog = open("./STD_BackupLog","r")
+    TodayLogLines = TodayLog.readlines()
+    StandardLogLines = StandardLog.readlines()
+    StandardLogProj = []
+    for stdline in StandardLogLines:             ##可优化部分
+        StandardLogProj += stdline
+    for line in TodayLogLines:
+        if line.strip() not in StandardLogProj:
+            print line
+            BackupStatus += 1
+    if BackupStatus == 0:
+        print project + '\'s backup is perfect today.'
+    else:
+        print 'There is ' + str(BackupStatus) + ' errors of ' + project + ' in Backup today '
 
 def CallbackOut(num,cmd,ip,username,rplcment):    
     callbackLogFile = open("./CallBack_BackupDailyLog","a")
@@ -66,31 +79,16 @@ def CallbackOut(num,cmd,ip,username,rplcment):
             cmd += i
         ## print cmd
         jk002SSH(ip,username,cmd,callbackLogFile)
+        project = ((open('../ProjList','r').readlines()[num]).strip())[12:]
         num += 1
         cmd = ''
+        CompareError(project)
         ## print 'Stdout OK!'
     print 'Done!'
 
-def CompareError():
-    BackupStatus = 1
-    TodayLog = open("./CallBack_BackupDailyLog","r")
-    StandardLog = open("./STD_BackupLog","r")
-    TodayLogLines = TodayLog.readlines()
-    StandardLogLines = StandardLog.readlines()
-    for stdline in StandardLogLines:
-        res = 0
-        for line in TodayLogLines:
-            if line == stdline:
-                res += 1
-            else:
-                continue
-        if res == 0:
-            print stdline
-            BackupStatus += 1
-    if BackupStatus == 1:
-        print 'Backup Status OK!'
-    else:
-        print 'Errors are listed above.'
+timespit = str(1000000000 * int(time.mktime(time.strptime(str(datetime.date.today()), '%Y-%m-%d'))))
+jk002ip,jk002username = '10.1.52.1','root'
+cmdline = 0
+sshcommand = ''
 
 CallbackOut(cmdline,sshcommand,jk002ip,jk002username,timespit)
-CompareError()

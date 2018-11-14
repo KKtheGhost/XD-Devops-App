@@ -46,6 +46,8 @@ def jk002SSH(ip,username,cmd,stdoutfile):
                 continue
             elif 'time' in line:
                 continue
+            elif '----' in line:
+                continue
             else:
                 char = line[20:]         ##变量分离
                 print >> stdoutfile,char   ##输出到文件："./CallBack_daily_log"
