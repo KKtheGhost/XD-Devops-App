@@ -14,7 +14,12 @@ import datetime
 reload(sys)
 sys.setdefaultencoding('utf-8') 
 
-def jk002SSH(ip,username,cmd,stdoutfile):
+## 参数获得
+ip,username = '10.1.52.1','root'
+
+## 本函数获得单个项目的归档字段，输出部分为一个临时文本文件。循环组件
+def jk002SSH(ip,username,cmd):       ##需要外部输入的有：ip,username
+    outfile = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/CallBack_ArchiveDailyLog','a')
     try:
         ssh_client = paramiko.SSHClient()
         ssh_client.load_system_host_keys()
@@ -32,49 +37,46 @@ def jk002SSH(ip,username,cmd,stdoutfile):
                 continue
             else:
                 char = line[20:]
-                print >> stdoutfile,char 
+                print >> outfile,char 
         ssh_client.close()
     except Exception,e:
         print e
 
-def CompareError(project):
-    ArchiveStatus = 0
-    TodayLog = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/CallBack_ArchiveDailyLog","r")
-    StandardLog = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/STD_ArchiveLog","r")
-    TodayLogLines = TodayLog.readlines()
-    StandardLogLines = StandardLog.readlines()
-    StandardLogProj,ErrorLine = [],[]
-    for stdline in StandardLogLines:             ##不可优化部分，STDBackupsout存在随业务变化的可能。
-        StandardLogProj += stdline
-    for line in TodayLogLines:
-        if line.strip() not in StandardLogProj:
-            ErrorLine += line.strip()[15:((line.strip()[15:]).append(' '))]     ##通过append获取rdsname
-            ArchiveStatus += 1
-    if ArchiveStatus == 0:
-        print project + '\'s archive is perfect today.'
-    else:
-        print 'There is ' + str(ArchiveStatus) + ' errors of ' + project + ' in Archive today. The error RDSserver is ' + ErrorLine 
+## 本函数用来将项目归档字段和标准归档字段进行比较。并且输出比较结果。循环组件
+def ArchCompare(proj):
+    log = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/CallBack_ArchiveDailyLog','r')
+    loglines = log.readlines()         ## 当前项目的列表，列表A
+    std = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/STD_ArchiveLog','r')
+    stdlines = std.readlines()
+    stdproj = []
+    for stdline in stdlines:
+        if proj == (stdline[7:12]).strip():
+            stdproj += stdline              ## 列表B，标准列表
+    retA = list(set(stdproj).difference(set(loglines)))
+    print "Differences are: ",retA
 
-def CallbackOut(num,cmd,ip,username): 
-    timespit = str(1000000000 * int(time.mktime(time.strptime(str(datetime.date.today()), '%Y-%m-%d'))))
-    callbackLogFile = open("/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/CallBack_ArchiveDailyLog","a")
-    callbackLogFile.seek(0)
-    callbackLogFile.truncate()
-    while num < 14:
-        cmdfile = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/jk002_ArchiveCmd','r')
-        projcmd = cmdfile.readlines()[num]
-        projcmd = projcmd.replace('timespit',timespit)
-        for i in projcmd.strip():
-            cmd += i
-        jk002SSH(ip,username,cmd,callbackLogFile)
-        project = ((open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ProjList','r').readlines()[num]).strip())[10:]
-        num += 1
-        cmd = ''
-        CompareError(project)
-    print 'Done!'
 
-jk002ip,jk002username = '10.1.52.1','root'
-cmdline = 0
-sshcommand = ''
+## 本函数获得cmd命令
+def docmd(x):
+    cmdfile = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/jk002_ArchiveCmd','r')
+    cmds = cmdfile.readlines()          ## 一个CMD集合的列表
+    cmd = cmds[x]
 
-CallbackOut(cmdline,sshcommand,jk002ip,jk002username)
+## 本函数用来整理，剪切，整合输出比较结果（循环）
+def finaloutput():
+    global ip,username
+    cmdfile = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/jk002_ArchiveCmd','r')
+    cmds = cmdfile.readlines()
+    x = 0
+    while x <= 13:
+        cmd = cmds[x]
+        project = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ProjList','r')
+        projs = project.readlines()
+        proj = projs[x]
+        jk002SSH(ip,username,cmd)
+        ArchCompare(proj)
+        x += 1
+
+finaloutput()
+
+
