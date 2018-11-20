@@ -41,9 +41,17 @@ def S3read():
     ip,username = '172.26.0.65','root'              ##通过某一个有S3 read权限的号前往，服务器随意
     i = 0
     while i < len(cmdline):
-        raw_cmd = cmdline[i].strip()
+        raw_cmd = (cmdline[i].strip())[16:]
         jk002SSH(ip,username,raw_cmd,i)
-        print 'Done!' + raw_cmd
+        out_reslist = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist/'+str(i),'r')
+        num_reslist = len(out_reslist.readlines())
+        out_reslist_std = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist_std/'+str(i),'r')
+        num_reslist_std = len(out_reslist_std.readlines())
+        if num_reslist == num_reslist_std:
+            archive_res = 'Congratulation! ' + (cmdline[i].strip())[:15] + ' has successfully archived.'
+        else:
+            archive_res = 'Oops! There are(is) ' + str(num_reslist_std - num_reslist) + ' error(s) of ' + (cmdline[i].strip())[:15] + ' were found during achiving.'
+        print archive_res
         i += 1
 
 ## 具体执行
