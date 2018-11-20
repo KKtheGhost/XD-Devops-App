@@ -49,9 +49,21 @@ def S3read():
         num_reslist_std = len(out_reslist_std.readlines())
         if num_reslist == num_reslist_std:
             archive_res = 'Congratulation! ' + (cmdline[i].strip())[:15] + ' has successfully archived.'
+            print archive_res
         else:
             archive_res = 'Oops! There are(is) ' + str(num_reslist_std - num_reslist) + ' error(s) of ' + (cmdline[i].strip())[:15] + ' were found during achiving.'
-        print archive_res
+            print archive_res
+            proj_head = (cmdline[i].strip())[:9]
+            if proj_head == '香肠派' or proj_head == '最终王' or proj_head == '心灵战' or proj_head == '横冲直' or proj_head == '仙侠道' or proj_head == '香肠派':
+                print '对应服务器是42x001.xd.cn'
+            elif proj_head == '仙境传':
+                print '对应服务器是51x001.xd.cn'
+            elif proj_head == '神仙道':
+                print '对应服务器是42x004.xd.cn'
+            elif proj_head == '横扫千':
+                print '对应服务器是46x003.xd.cn'
+            else:
+                print '对应管理服务器请手动查询'        
         i += 1
 
 ## 具体执行
