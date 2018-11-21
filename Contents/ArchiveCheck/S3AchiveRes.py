@@ -42,6 +42,7 @@ def S3read():
     i = 0
     while i < len(cmdline):
         raw_cmd = (cmdline[i].strip())[16:]
+        cmdfile.close()
         jk002SSH(ip,username,raw_cmd,i)
         out_reslist = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist/'+str(i),'r')
         num_reslist = len(out_reslist.readlines())
@@ -50,7 +51,11 @@ def S3read():
         if num_reslist == num_reslist_std:
             archive_res = 'Congratulation! ' + (cmdline[i].strip())[:15] + ' has successfully archived.'
             print archive_res
-        else:
+        if num_reslist > num_reslist_std:
+            archive_res = 'Congratulation! ' + (cmdline[i].strip())[:15] + ' has successfully archived.'
+            os.system('cp ./reslist/' + str(i) + ' ./reslist_std/' + str(i))
+            print archive_res
+        if num_reslist < num_reslist_std:
             archive_res = 'Oops! There are(is) ' + str(num_reslist_std - num_reslist) + ' error(s) of ' + (cmdline[i].strip())[:15] + ' were found during achiving.'
             print archive_res
             proj_head = (cmdline[i].strip())[:9]
