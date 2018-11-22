@@ -16,24 +16,61 @@ def get_server_raid_card_metrics():
     manufactory = commands.getoutput(manufactory_check_command)
     ## 创建字典，作为是否导入数据库的判定。
     influx_raid_record_fields = {"raid_health": 1,"nvme_health":1,"physical_disk_health":1}
-
-    ## 当server是dell的时候
-    if (manufactory.strip())[14:] == 'Dell Inc.':
+##========================================================================================
+    ## 当server是dell的时候,不同型号的戴尔服务器存在不同的策略
+    if (manufactory.split( ))[1] == 'Dell':
         dell_product_check_command = 'dmidecode -t 1 | grep Product'
         dell_product = commands.getoutput(dell_product_check_command)
-        
-        ## 不同型号的戴尔服务器存在不同的策略
-        if dell_product[14:] == 'PowerEdge R720':
+        ## 当型号是R720的时候==========================================
+        if (dell_product.split( ))[3] == 'R720' or (dell_product.split( ))[3] == 'R620':
+            ## "raid_health"对于阵列卡状态的判断
+            raid_health_get_command = '/opt/MegaRAID/MegaCli/MegaCli64 -AdpAllInfo -aALL|grep -iE Virtual|awk \'{print $4}\''
+            raid_health_info = commands.getoutput(raid_health_get_command)
+            if raid_health_info == '':
+                influx_raid_record_fields["raid_health"] = 0
+            elif raid_health_info.isdigit() == False:
+                influx_raid_record_fields["raid_health"] = 0
+            else:
+                influx_raid_record_fields["raid_health"] = 1
+            ## "nvme_health"对于有无nvme固态判断，并输出有无报错
+            nvme_get_mounted_route_command = 'lsblk|grep nvme|sed \'1d\'|awk \'{print $7}\''
+            nvme_mounted_route = commands.getoutput(nvme_get_mounted_route_command)
+            nvme_status_get = commands.getoutput('ls ' + nvme_mounted_route)
+            if nvme_status == 'ls:' or '-ba':
+                influx_raid_record_fields["nvme_health"] = 1
+            elif nvme_status == '':
+                influx_raid_record_fields["nvme_health"] = 0
+            else:
+                influx_raid_record_fields["nvme_health"] = 1
+            ## "physical_disk_health"通过raid卡指令判断机械硬盘状态的部分
             dell_raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
             dell_raid_info = commands.getoutput(dell_raid_info_get_command)
-        elif dell_product[14:] == 'PowerEdge R620':
+            dell_raid_info_list = dell_raid_info[dell_raid_info_index].split('\n')
+            dell_raid_info_list_index = 1
+            while dell_raid_info_list_index < len(dell_raid_info_list):
+                if (dell_raid_info_list[dell_raid_info_list_index].split( ))[3] != '0' and (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Media':
+                    influx_raid_record_fields["physical_disk_health"] = 0
+                    dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[2]
+                    error_slot_state = dell_error_slot_number + ' 存在扇区错误'
+                    if (dell_raid_info_list[dell_raid_info_list_index + 1].split( ))[3] != '0' and (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Other':
+                        error_slot_state.join('和接触连接错误')
+                else:
+                    influx_raid_record_fields["physical_disk_health"] = 0
+                    error_slot_state = 'OK'
+            return influx_raid_record_fields,error_slot_state
+        ## 当型号是R610的时候==========================================
+        elif (dell_product.split( ))[3] == 'R610':
+            influx_raid_record_fields["raid_health"] = 1
+            influx_raid_record_fields["nvme_health"] = 1
+            influx_raid_record_fields["physical_disk_health"] = 1
+            return '本型号机器无法获取raid卡相关信息'
+        ## 当型号是R410的时候==========================================
+        elif (dell_product.split( ))[3] == 'R410':
 
-        elif dell_product[14:] == 'PowerEdge R610':
 
-        elif dell_product[14:] == 'PowerEdge R410':
-
+##========================================================================================
     ## 当server时HUAWEI的时候
-    if (manufactory.strip())[14:] == 'Huawei Technologies Co., Ltd.':
+    if (manufactory.split( ))[1] == 'Huawei':
         ## "raid_health"对于阵列卡状态的判断，如果
         raid_health_get_command = '/opt/MegaRAID/MegaCli/MegaCli64 -AdpAllInfo -aALL|grep -iE Virtual|awk \'{print $4}\''
         raid_health_info = commands.getoutput(raid_health_get_command)
@@ -62,16 +99,18 @@ def get_server_raid_card_metrics():
             if (huawei_raid_info_list[huawei_raid_info_list_index].split( ))[3] != '0' and (huawei_raid_info_list[huawei_raid_info_list_index].split( ))[0] == 'Media':
                 influx_raid_record_fields["physical_disk_health"] = 0
                 huawei_error_slot_number = (huawei_raid_info_list[huawei_raid_info_list_index - 1].split( ))[0] + ' ' + (huawei_raid_info_list[huawei_raid_info_list_index - 1].split( ))[2]
-                huawei_error_slot_state = huawei_error_slot_number + ' 存在扇区错误'
+                error_slot_state = huawei_error_slot_number + ' 存在扇区错误'
                 if (huawei_raid_info_list[huawei_raid_info_list_index + 1].split( ))[3] != '0' and (huawei_raid_info_list[huawei_raid_info_list_index].split( ))[0] == 'Other':
-                    huawei_error_slot_state.join('和接触连接错误')
+                    error_slot_state.join('和接触连接错误')
             else:
                 influx_raid_record_fields["physical_disk_health"] = 0
-                huawei_error_slot_state = 'OK'
-        return influx_raid_record_fields，huawei_error_slot_state
+                error_slot_state = 'OK'
+        return influx_raid_record_fields,error_slot_state
 
+
+##========================================================================================
     ## 当server是HP的时候，HP比较特殊，需要进/data/然后去具体的每个盘里面，运行dmesg|grep -IE 'I/O error',然后通过获得的dev信息再用lshw去获取slot信息。
-    if (manufactory.strip())[14:] == 'HP':
+    if (manufactory.split( ))[1] == 'HP':
 
     raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
     output = commands.getoutput(command)
@@ -91,6 +130,7 @@ def get_server_raid_card_metrics():
     metrics.add(Metric("hardware.raid_card_battery", tags, dict_to_fields(fields)))
     return metrics.to_string()
 
+##========================================================================================
 ##========================================================================================
 
 def get_dell_raid_card_metrics():
