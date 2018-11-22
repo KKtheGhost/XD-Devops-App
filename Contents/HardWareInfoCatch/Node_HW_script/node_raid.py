@@ -21,11 +21,10 @@ def get_server_raid_card_metrics():
     if (manufactory.split( ))[1] == 'Dell':
         dell_product_check_command = 'dmidecode -t 1 | grep Product'
         dell_product = commands.getoutput(dell_product_check_command)
-        ## 当型号是R720的时候==========================================
+        ## 当型号是R720或R620的时候==========================================
         if (dell_product.split( ))[3] == 'R720' or (dell_product.split( ))[3] == 'R620':
             ## "raid_health"对于阵列卡状态的判断
             raid_health_get_command = '/opt/MegaRAID/MegaCli/MegaCli64 -AdpAllInfo -aALL|grep -iE Virtual|awk \'{print $4}\''
-            raid_health_info = commands.getoutput(raid_health_get_command)
             if raid_health_info == '':
                 influx_raid_record_fields["raid_health"] = 0
             elif raid_health_info.isdigit() == False:
@@ -45,6 +44,10 @@ def get_server_raid_card_metrics():
             ## "physical_disk_health"通过raid卡指令判断机械硬盘状态的部分
             dell_raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
             dell_raid_info = commands.getoutput(dell_raid_info_get_command)
+            ## 部分机器的MegaRaid位置是/opt/lsi/MegaCLI
+            if len(dell_raid_info) < 4:
+                dell_raid_info_get_command = "/opt/lsi/MegaCLI/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
+                dell_raid_info = commands.getoutput(dell_raid_info_get_command)
             dell_raid_info_list = dell_raid_info[dell_raid_info_index].split('\n')
             dell_raid_info_list_index = 1
             while dell_raid_info_list_index < len(dell_raid_info_list):
@@ -59,14 +62,12 @@ def get_server_raid_card_metrics():
                     error_slot_state = 'OK'
             return influx_raid_record_fields,error_slot_state
         ## 当型号是R610的时候==========================================
-        elif (dell_product.split( ))[3] == 'R610':
+        else:
             influx_raid_record_fields["raid_health"] = 1
             influx_raid_record_fields["nvme_health"] = 1
-            influx_raid_record_fields["physical_disk_health"] = 1
-            return '本型号机器无法获取raid卡相关信息'
-        ## 当型号是R410的时候==========================================
-        elif (dell_product.split( ))[3] == 'R410':
-
+            influx_raid_record_fields["physical_disk_health"] = 2           ## 特殊情况物理盘健康指标为2，用来之后作省略判断
+            error_slot_state = '本型号机器无权限或无法获取raid卡相关信息'
+            return influx_raid_record_fields,error_slot_state
 
 ##========================================================================================
     ## 当server时HUAWEI的时候
@@ -111,24 +112,27 @@ def get_server_raid_card_metrics():
 ##========================================================================================
     ## 当server是HP的时候，HP比较特殊，需要进/data/然后去具体的每个盘里面，运行dmesg|grep -IE 'I/O error',然后通过获得的dev信息再用lshw去获取slot信息。
     if (manufactory.split( ))[1] == 'HP':
+        ## "raid_health"对于阵列卡状态的判断，如果
+        raid_health_get_command = '/opt/MegaRAID/MegaCli/MegaCli64 -AdpAllInfo -aALL|grep -iE Virtual|awk \'{print $4}\''
+        raid_health_info = commands.getoutput(raid_health_get_command)
 
-    raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
-    output = commands.getoutput(command)
-    fields = {"health": 1}
-    tags = {}
-    if "use /cx/cv" in output:
-        command = "/opt/MegaRAID/storcli/storcli64 /c0/cv show|grep -E -i 'Model|Ctrl' -A 2 |tail -1"
-        output = commands.getoutput(command)
-        if "Optimal" in output:
-            fields["health"] = 1
+        ## "nvme_health"对于有无nvme固态判断，并输出有无报错
+        nvme_get_mounted_route_command = 'lsblk|grep nvme|sed \'1d\'|awk \'{print $7}\''
+        nvme_mounted_route = commands.getoutput(nvme_get_mounted_route_command)
+        nvme_status_get = commands.getoutput('ls ' + nvme_mounted_route)
+        if nvme_status == 'ls:' or '-ba':
+            influx_raid_record_fields["nvme_health"] = 1
+        elif nvme_status == '':
+            influx_raid_record_fields["nvme_health"] = 0
         else:
-            fields["health"] = 0
-    elif "Battery is absent!" in output:
-        fields["health"] = 1
-    tags["status"] = output
-    metrics = Metrics()
-    metrics.add(Metric("hardware.raid_card_battery", tags, dict_to_fields(fields)))
-    return metrics.to_string()
+            influx_raid_record_fields["nvme_health"] = 1
+        ## "physical_disk_health"通过raid卡指令判断机械硬盘状态的部分
+        hp_raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
+        hp_raid_info = commands.getoutput(hp_raid_info_get_command)
+        hp_raid_info_list = hp_raid_info[hp_raid_info_index].split('\n')
+        hp_raid_info_list_index = 1
+        
+        return influx_raid_record_fields,error_slot_state
 
 ##========================================================================================
 ##========================================================================================
