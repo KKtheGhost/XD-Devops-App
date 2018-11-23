@@ -113,9 +113,12 @@ def get_server_raid_card_metrics():
     ## 当server是HP的时候，HP比较特殊，需要进/data/然后去具体的每个盘里面，运行dmesg|grep -IE 'I/O error',然后通过获得的dev信息再用lshw去获取slot信息。
     if (manufactory.split( ))[1] == 'HP':
         ## "raid_health"对于阵列卡状态的判断，如果
-        raid_health_get_command = '/opt/MegaRAID/MegaCli/MegaCli64 -AdpAllInfo -aALL|grep -iE Virtual|awk \'{print $4}\''
+        raid_health_get_command = 'hpssacli ctrl all show status|grep Controller|awk \'{print $3}\''
         raid_health_info = commands.getoutput(raid_health_get_command)
-
+        if raid_health_info == 'OK':
+            influx_raid_record_fields["raid_health"] = 1
+        else:
+            influx_raid_record_fields["raid_health"] = 0
         ## "nvme_health"对于有无nvme固态判断，并输出有无报错
         nvme_get_mounted_route_command = 'lsblk|grep nvme|sed \'1d\'|awk \'{print $7}\''
         nvme_mounted_route = commands.getoutput(nvme_get_mounted_route_command)
@@ -131,6 +134,9 @@ def get_server_raid_card_metrics():
         hp_raid_info = commands.getoutput(hp_raid_info_get_command)
         hp_raid_info_list = hp_raid_info[hp_raid_info_index].split('\n')
         hp_raid_info_list_index = 1
+        
+
+
         
         return influx_raid_record_fields,error_slot_state
 
