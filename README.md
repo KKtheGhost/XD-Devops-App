@@ -29,3 +29,7 @@ Mainly using Python 2.7 and Xcode and VS Code.
 ### Security Strategies
 
 Only via SSH login from LAN. Never get a chance to access Wlan.
+
+###
+
+We are working on finding a way to solve the problem of catch raid data from different Serial Machines.
