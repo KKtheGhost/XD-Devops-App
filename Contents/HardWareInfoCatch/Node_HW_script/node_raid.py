@@ -25,6 +25,7 @@ def get_server_raid_card_metrics():
         if (dell_product.split( ))[3] == 'R720' or (dell_product.split( ))[3] == 'R620':
             ## "raid_health"对于阵列卡状态的判断
             raid_health_get_command = '/opt/MegaRAID/MegaCli/MegaCli64 -AdpAllInfo -aALL|grep -iE Virtual|awk \'{print $4}\''
+            raid_health_info = commands.getoutput(raid_health_get_command)
             if raid_health_info == '':
                 influx_raid_record_fields["raid_health"] = 0
             elif raid_health_info.isdigit() == False:
@@ -33,8 +34,8 @@ def get_server_raid_card_metrics():
                 influx_raid_record_fields["raid_health"] = 1
             ## "nvme_health"对于有无nvme固态判断，并输出有无报错
             nvme_get_mounted_route_command = 'lsblk|grep nvme|sed \'1d\'|awk \'{print $7}\''
-            nvme_mounted_route = commands.getoutput(nvme_get_mounted_route_command)
-            nvme_status_get = commands.getoutput('ls ' + nvme_mounted_route)
+            nvme_mounted_route = commands.getoutput(nvme_get_mounted_route_command)     
+            nvme_status = commands.getoutput('ls ' + nvme_mounted_route)
             if nvme_status == 'ls:' or '-ba':
                 influx_raid_record_fields["nvme_health"] = 1
             elif nvme_status == '':
@@ -48,7 +49,7 @@ def get_server_raid_card_metrics():
             if len(dell_raid_info) < 4:
                 dell_raid_info_get_command = "/opt/lsi/MegaCLI/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
                 dell_raid_info = commands.getoutput(dell_raid_info_get_command)
-            dell_raid_info_list = dell_raid_info[dell_raid_info_index].split('\n')
+            dell_raid_info_list = dell_raid_info.split('\n')
             dell_raid_info_list_index = 1
             while dell_raid_info_list_index < len(dell_raid_info_list):
                 if (dell_raid_info_list[dell_raid_info_list_index].split( ))[3] != '0' and (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Media':
@@ -84,7 +85,7 @@ def get_server_raid_card_metrics():
         ## "nvme_health"对于有无nvme固态判断，并输出有无报错
         nvme_get_mounted_route_command = 'lsblk|grep nvme|sed \'1d\'|awk \'{print $7}\''
         nvme_mounted_route = commands.getoutput(nvme_get_mounted_route_command)
-        nvme_status_get = commands.getoutput('ls ' + nvme_mounted_route)
+        nvme_status = commands.getoutput('ls ' + nvme_mounted_route)
         if nvme_status == 'ls:' or '-ba':
             influx_raid_record_fields["nvme_health"] = 1
         elif nvme_status == '':
@@ -94,7 +95,7 @@ def get_server_raid_card_metrics():
         ## "physical_disk_health"通过raid卡指令判断机械硬盘状态的部分
         huawei_raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
         huawei_raid_info = commands.getoutput(huawei_raid_info_get_command)
-        huawei_raid_info_list = huawei_raid_info[huawei_raid_info_index].split('\n')
+        huawei_raid_info_list = huawei_raid_info.split('\n')
         huawei_raid_info_list_index = 1
         while huawei_raid_info_list_index < len(huawei_raid_info_list):
             if (huawei_raid_info_list[huawei_raid_info_list_index].split( ))[3] != '0' and (huawei_raid_info_list[huawei_raid_info_list_index].split( ))[0] == 'Media':
@@ -132,12 +133,12 @@ def get_server_raid_card_metrics():
         ## "physical_disk_health"通过raid卡指令判断机械硬盘状态的部分
         hp_raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
         hp_raid_info = commands.getoutput(hp_raid_info_get_command)
-        hp_raid_info_list = hp_raid_info[hp_raid_info_index].split('\n')
+        hp_raid_info_list = hp_raid_info.split('\n')
         hp_raid_info_list_index = 1
         
 
 
-        
+
         return influx_raid_record_fields,error_slot_state
 
 ##========================================================================================
