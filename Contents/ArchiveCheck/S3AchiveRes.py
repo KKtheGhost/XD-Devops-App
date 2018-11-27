@@ -20,13 +20,16 @@ def aws_valid_test():
     get_aws_certification_command = 'cat ~/.aws/credentials'
     aws_certification = commands.getoutput(get_aws_certification_command)
     ## 分两种情况，一个是用户机器已安装awscli，一种是没有安装awscli
-    if len(aws_certification) == 1:
-        if aws_certification.split( )[1] == '-bash:':
+    length = len(aws_certification.split('\n'))
+    if length == 1:
+        if aws_certification.split( )[0] == 'cat:' or aws_certification.split( )[0] == '-cat:':
             aws_certification_len = 0
         else:
             aws_certification_len = 1
+    if length >=3:
+        aws_certification_len = length
     else:
-        aws_certification_len = len(aws_certification.split('\n'))
+        return 0
     return aws_certification_len
 
 ## 主要功能部分:
@@ -150,7 +153,6 @@ def S3read_remote():
 ##==============##==============##==============##==============##
 ## 具体执行
 def s3_checkout():
-    aws_valid_test()
     if aws_valid_test() >= 3:       ##本地安装AWS cli且有certificate
         region_get_command = 'cat ~/.aws/config|grep region|awk \'{print $3}\''
         aws_region = commands.getoutput(region_get_command)
@@ -161,8 +163,8 @@ def s3_checkout():
             if no_region_choice == 'y' or no_region_choice == 'Y':
                 S3read_remote()
             else:
-                return
-    elif aws_valid_test() == 0:     ##本地安装AWS cli，但是没有certificate
+                return 0
+    elif aws_valid_test() == 1:     ##本地安装AWS cli，但是没有certificate
         print '没有检测到AWS证书.'
         key_input = raw_input('是否需要输入AccessKey?(y/n):')
         if key_input == 'y' or key_input == 'Y':                ## 主要需要设置 keyID AccessKey output region
@@ -178,14 +180,17 @@ def s3_checkout():
             print >> aws_credential_config,aws_secret_access_key
             S3read_local()
         else:
-            no_certificate_choice = raw_input（'无有效certificate，抱歉。如果需要调用远程代理查看，请输入y。若需要退出请输入n:'）
+            no_certificate_choice = raw_input('无有效certificate，抱歉。如果需要调用远程代理查看，请输入y。若需要退出请输入n:')
             if no_certificate_choice == 'y' or no_certificate_choice == 'Y':
                 S3read_remote()
             else:
-                return
+                return 0
     elif aws_valid_test() == 0:     ##本地压根没有装AWS，直接remote检测
         print '本机未安装AWS cli软体或者依赖，为您跳转到远程跳板进行S3检测'
         S3read_remote()
+    else:
+        print "Error!"
+        return 0
     
 ## 主程序Bingo！
 s3_checkout()
