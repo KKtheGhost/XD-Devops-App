@@ -5,9 +5,8 @@
 #@QQ      : 1669815117
 #@Version : 0.1.0
 
-import re
+import os
 import commands
-import pathlib2
 
 ## 通用化：获取服务器raid卡和物理磁盘状态信息。return一个字典来判定是否输出到influxdb，具体输出内容存到本地临时文件进行推送。（暂时计划）
 def get_server_raid_card_metrics():
