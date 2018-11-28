@@ -70,10 +70,10 @@ def S3read_local():
         out_reslist_std = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist_std/'+str(i),'r')
         num_reslist_std = len(out_reslist_std.readlines())
         if num_reslist == num_reslist_std:
-            archive_res = 'Congratulation! ' + (cmdline[i].strip())[:15] + ' has successfully archived.'
+            archive_res = 'Yes! ' + (cmdline[i].strip())[:15] + ' was successfully archived.'
             print archive_res
         if num_reslist > num_reslist_std:
-            archive_res = 'Congratulation! ' + (cmdline[i].strip())[:15] + ' has successfully archived.'
+            archive_res = 'Yes! ' + (cmdline[i].strip())[:15] + ' was successfully archived.'
             os.system('cp ./reslist/' + str(i) + ' ./reslist_std/' + str(i))
             print archive_res
         if num_reslist < num_reslist_std:
