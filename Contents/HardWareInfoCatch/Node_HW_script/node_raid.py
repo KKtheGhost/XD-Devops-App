@@ -66,7 +66,7 @@ def get_server_raid_card_metrics():
                         error_slot_state = error_slot_state.join(dell_error_slot_number + ' 存在扇区错误。')
                     elif (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Other':
                         dell_raid_stats_bool += 1
-                        dell_error_slot_number += (dell_raid_info_list[dell_raid_info_list_index - 2].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[-1]
+                        dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 2].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[-1]
                         error_slot_state = error_slot_state.join(dell_error_slot_number + '存在接触连接错误。')
                 dell_raid_info_list_index += 1
             if dell_raid_stats_bool > 0:

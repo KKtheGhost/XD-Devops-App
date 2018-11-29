@@ -57,17 +57,32 @@ def get_server_raid_card_metrics():
             dell_raid_stats_bool = 0
             error_slot_state = ''
             while dell_raid_info_list_index < len(dell_raid_info_list):         ##正确的循环走法，按照行直接判断就行。
-                if (dell_raid_info_list[dell_raid_info_list_index].split( ))[-1] == '0':
+                if (dell_raid_info_list[dell_raid_info_list_index].split( ))[-1] == '0':                    ## 如果一行结尾是0，那至少这行肯定正常
                     dell_raid_stats_bool += 0
-                else:
-                    if (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Media':
-                        dell_raid_stats_bool += 1
-                        dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[-1]
-                        error_slot_state = error_slot_state.join(dell_error_slot_number + ' 存在扇区错误。')
-                    elif (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Other':
-                        dell_raid_stats_bool += 1
-                        dell_error_slot_number += (dell_raid_info_list[dell_raid_info_list_index - 2].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[-1]
-                        error_slot_state = error_slot_state.join(dell_error_slot_number + '存在接触连接错误。')
+                elif ((dell_raid_info_list[dell_raid_info_list_index].split( ))[-1]).isdigit() == True:     ## 如果是非零数字
+                    if (dell_raid_info_list[dell_raid_info_list_index].split( ))[-1] == 'Slot':             ## 如果这行开头是SLot，则也正常
+                        dell_raid_stats_bool += 0
+                    else:                                                                                   ## 如果是其他行，则必定出现了Error报错
+                        if (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Media':         ## 是否扇区坏道错误
+                            dell_raid_stats_bool += 1
+                            dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[-1]
+                            dell_error_slot_size = (dell_raid_info_list[dell_raid_info_list_index + 2].split( ))[-4] + ' ' + (dell_raid_info_list[dell_raid_info_list_index + 2].split( ))[-3]
+                            error_slot_state = error_slot_state.join(dell_error_slot_number + ' 存在扇区错误,' + '磁盘大小为' + dell_error_slot_size + '。')
+                        elif (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Other':       ## 是否是接触问题
+                            dell_raid_stats_bool += 1
+                            dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 2].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 2].split( ))[-1]
+                            dell_error_slot_size = (dell_raid_info_list[dell_raid_info_list_index + 1].split( ))[-4] + ' ' + (dell_raid_info_list[dell_raid_info_list_index + 1].split( ))[-3]
+                            error_slot_state = error_slot_state.join(dell_error_slot_number + '存在接触连接错误。' + '磁盘大小为' + dell_error_slot_size + '。')
+                else:                                                                                      ## 如果是非数字
+                    if (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Firmware':          ## 如果是firmware状态
+                        if (dell_raid_info_list[dell_raid_info_list_index].split( ))[-2] == 'Spun Up':      ## 判断是否正常
+                            dell_raid_stats_bool += 0
+                        else:
+                            dell_raid_stats_bool += 1
+                            dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 4].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 4].split( ))[-1]
+                            error_slot_state = error_slot_state.join(dell_error_slot_number + ' 存在识别错误。')
+                    elif (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Non':
+                            dell_raid_stats_bool += 0
                 dell_raid_info_list_index += 1
             if dell_raid_stats_bool > 0:
                 influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
@@ -196,4 +211,3 @@ def get_server_raid_card_metrics():
             return influx_raid_record_fields,error_slot_state
 
 print get_server_raid_card_metrics()[0]
-print get_server_raid_card_metrics()[1]
