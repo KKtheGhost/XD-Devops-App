@@ -5,6 +5,7 @@
 #@QQ      : 1669815117
 #@Version : 0.1.0
 
+from __future__ import division
 import os
 import commands
 
