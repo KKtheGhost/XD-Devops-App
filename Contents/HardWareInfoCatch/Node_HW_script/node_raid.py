@@ -63,6 +63,7 @@ def get_server_raid_card_metrics():
                 else:
                     influx_raid_record_fields["physical_disk_health"] = 1
                     error_slot_state = 'OK'
+                dell_raid_info_list_index += 1
             return influx_raid_record_fields,error_slot_state
         ## 当型号是R610的时候==========================================
         else:
@@ -112,6 +113,7 @@ def get_server_raid_card_metrics():
             else:
                 influx_raid_record_fields["physical_disk_health"] = 1
                 error_slot_state = 'OK'
+            huawei_raid_info_list_index += 1
         return influx_raid_record_fields,error_slot_state
 
 
@@ -155,6 +157,7 @@ def get_server_raid_card_metrics():
                 else:
                     influx_raid_record_fields["physical_disk_health"] = 1
                     error_slot_state = 'OK'
+                hp_raid_info_list_index += 1
             return influx_raid_record_fields,error_slot_state
         elif hp_product == 'ProLiant DL380 Gen9':
             hp_raid_info_get_command = "hpssacli ctrl slot=0 pd all show|grep physicaldrive"
@@ -170,7 +173,7 @@ def get_server_raid_card_metrics():
                 else:
                     influx_raid_record_fields["physical_disk_health"] = 1
                     error_slot_state = 'OK'
+                hp_raid_info_list_index += 1
             return influx_raid_record_fields,error_slot_state
 
-print get_server_raid_card_metrics()[0]
-print get_server_raid_card_metrics()[1]
+get_server_raid_card_metrics()

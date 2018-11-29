@@ -47,22 +47,27 @@ def get_server_raid_card_metrics():
             ## "physical_disk_health"通过raid卡指令判断机械硬盘状态的部分
             dell_raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
             dell_raid_info = commands.getoutput(dell_raid_info_get_command)
+            dell_raid_info_list = dell_raid_info.split('\n')
             ## 部分机器的MegaRaid位置是/opt/lsi/MegaCLI
-            if len(dell_raid_info) < 4:
+            if len(dell_raid_info_list) < 4:
                 dell_raid_info_get_command = "/opt/lsi/MegaCLI/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
                 dell_raid_info = commands.getoutput(dell_raid_info_get_command)
-            dell_raid_info_list = dell_raid_info.split('\n')
+                dell_raid_info_list = dell_raid_info.split('\n')
             dell_raid_info_list_index = 1
-            while dell_raid_info_list_index < len(dell_raid_info_list):
-                if (dell_raid_info_list[dell_raid_info_list_index].split( ))[3] != '0' and (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Media':
-                    influx_raid_record_fields["physical_disk_health"] = 0
-                    dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[2]
-                    error_slot_state = dell_error_slot_number + ' 存在扇区错误'
-                    if (dell_raid_info_list[dell_raid_info_list_index + 1].split( ))[3] != '0' and (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Other':
-                        error_slot_state.join('和接触连接错误')
+            while dell_raid_info_list_index < len(dell_raid_info_list):         ##正确的循环走法，按照行直接判断就行。
+                if (dell_raid_info_list[dell_raid_info_list_index].split( ))[3] != '0':
+                    if (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Media':
+                        influx_raid_record_fields["physical_disk_health"] = 0
+                        dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[2]
+                        error_slot_state = dell_error_slot_number + ' 存在扇区错误。'
+                    elif (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Other':
+                        influx_raid_record_fields["physical_disk_health"] = 0
+                        dell_error_slot_number += (dell_raid_info_list[dell_raid_info_list_index - 2].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[2]
+                        error_slot_state.join(dell_error_slot_number + '存在接触连接错误。')
                 else:
                     influx_raid_record_fields["physical_disk_health"] = 1
                     error_slot_state = 'OK'
+                dell_raid_info_list_index += 1
             return influx_raid_record_fields,error_slot_state
         ## 当型号是R610的时候==========================================
         else:
@@ -112,6 +117,7 @@ def get_server_raid_card_metrics():
             else:
                 influx_raid_record_fields["physical_disk_health"] = 1
                 error_slot_state = 'OK'
+            huawei_raid_info_list_index += 1
         return influx_raid_record_fields,error_slot_state
 
 
@@ -155,6 +161,7 @@ def get_server_raid_card_metrics():
                 else:
                     influx_raid_record_fields["physical_disk_health"] = 1
                     error_slot_state = 'OK'
+                hp_raid_info_list_index += 1
             return influx_raid_record_fields,error_slot_state
         elif hp_product == 'ProLiant DL380 Gen9':
             hp_raid_info_get_command = "hpssacli ctrl slot=0 pd all show|grep physicaldrive"
@@ -170,6 +177,7 @@ def get_server_raid_card_metrics():
                 else:
                     influx_raid_record_fields["physical_disk_health"] = 1
                     error_slot_state = 'OK'
+                hp_raid_info_list_index += 1
             return influx_raid_record_fields,error_slot_state
 
 print get_server_raid_card_metrics()[0]
