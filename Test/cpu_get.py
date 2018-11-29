@@ -34,4 +34,5 @@ def cpu_live_usage():           ##返回CPU_error,作为之后的判断。
             cpu_usage_percent = (float(cpu_user_usage) + float(cpu_system_usage))
         return cpu_error,cpu_usage_percent           ##获得了当前时刻的CPU状态和占用比例
 
-cpu_live_usage()
+print cpu_live_usage()[0]
+print cpu_live_usage()[1]

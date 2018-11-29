@@ -172,4 +172,5 @@ def get_server_raid_card_metrics():
                     error_slot_state = 'OK'
             return influx_raid_record_fields,error_slot_state
 
-get_server_raid_card_metrics()
+print get_server_raid_card_metrics()[0]
+print get_server_raid_card_metrics()[1]

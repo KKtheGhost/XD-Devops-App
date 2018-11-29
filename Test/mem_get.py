@@ -14,8 +14,8 @@ def mem_live_usage():           ##返回CPU_error,作为之后的判断。
     if mem_live_status == '':
         print '请安装top工具或者检查本机cpu状态'
         mem_error = 'unknown'
-        mem_usage_status = 'unknown'
-        return mem_error,mem_usage_status
+        mem_usage_percent = 'unknown'
+        return mem_error,mem_usage_percent
     else:
         mem_total = (filter(lambda ch: ch in '0123456789. ', mem_live_status)).split(  )[1]
         mem_available = (filter(lambda ch: ch in '0123456789. ', mem_live_status)).split(  )[7]
@@ -23,16 +23,13 @@ def mem_live_usage():           ##返回CPU_error,作为之后的判断。
         mem_usage_percent = mem_usage/int(mem_total)
         if mem_usage_percent > 0.5:
             mem_error = 'medium'
-            mem_usage_status = 'healthy'
         elif mem_usage_percent > 0.7:
-            mem_error = 'warning'
-            mem_usage_status = 'warning'          
+            mem_error = 'warning'        
         elif mem_usage_percent > 0.95:
             mem_error = 'critical'
-            mem_usage_status = 'critical'
         else:
             mem_error = 'healthy'
-            mem_usage_status = 'healthy'
-        return mem_error,mem_usage_status           ##获取了实时的内存状态和占用比例:wq
+        return mem_error,mem_usage_percent           ##获取了实时的内存状态和占用比例:wq
 
-mem_live_usage()
+print mem_live_usage()[0]
+print mem_live_usage()[1]
