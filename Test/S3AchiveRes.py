@@ -74,7 +74,7 @@ def S3read_local():
             print archive_res
         if num_reslist > num_reslist_std:
             archive_res = 'Yes! ' + (cmdline[i].strip())[:15] + ' was successfully archived.'
-            os.system('cp ./reslist/' + str(i) + ' ./reslist_std/' + str(i))
+            os.system('cp /Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist/' + str(i) + ' /Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist_std/' + str(i))
             print archive_res
         if num_reslist < num_reslist_std:
             archive_res = 'Oops! There are(is) ' + str(num_reslist_std - num_reslist) + ' error(s) of ' + (cmdline[i].strip())[:15] + ' were found during achiving.'
@@ -132,7 +132,7 @@ def S3read_remote():
             print archive_res
         if num_reslist > num_reslist_std:
             archive_res = 'Congratulation! ' + (cmdline[i].strip())[:15] + ' has successfully archived.'
-            os.system('cp ./reslist/' + str(i) + ' ./reslist_std/' + str(i))
+            os.system('cp /Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist/' + str(i) + ' /Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist_std/' + str(i))
             print archive_res
         if num_reslist < num_reslist_std:
             archive_res = 'Oops! There are(is) ' + str(num_reslist_std - num_reslist) + ' error(s) of ' + (cmdline[i].strip())[:15] + ' were found during achiving.'
