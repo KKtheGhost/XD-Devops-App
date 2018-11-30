@@ -185,6 +185,80 @@ def get_server_raid_card_metrics():
             influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
         return influx_raid_record_fields,error_stats_all
 
+##========================================================================================
+    ## 当server是HP的时候，HP比较特殊，需要进/data/然后去具体的每个盘里面，运行dmesg|grep -IE 'I/O error',然后通过获得的dev信息再用lshw去获取slot信息。
+    if (manufactory.split( ))[1] == 'HP':
+        ## "raid_health"对于阵列卡状态的判断，如果
+        raid_health_get_command = 'hpssacli ctrl all show status|grep Controller|awk \'{print $3}\''
+        raid_health_info = commands.getoutput(raid_health_get_command)
+        if raid_health_info == 'OK':
+            influx_raid_record_fields["raid_health"] = 1
+        else:
+            influx_raid_record_fields["raid_health"] = 0
+        ## "nvme_health"对于有无nvme固态判断，并输出有无报错
+        nvme_get_mounted_route_command = 'lsblk|grep nvme|sed \'1d\'|awk \'{print $7}\''
+        nvme_mounted_route = commands.getoutput(nvme_get_mounted_route_command)
+        if nvme_mounted_route == '':
+            influx_raid_record_fields["nvme_health"] = 1
+        else:
+            nvme_status_get = commands.getoutput('ls ' + nvme_mounted_route)
+            if nvme_status_get == 'ls:' or '-ba':
+                influx_raid_record_fields["nvme_health"] = 1
+            elif nvme_status_get == '':
+                influx_raid_record_fields["nvme_health"] = 0
+            else:
+                influx_raid_record_fields["nvme_health"] = 1
+        ## "physical_disk_health"通过raid卡指令判断机械硬盘状态的部分
+        hp_product_check_command = 'dmidecode -t 1 | grep Product|awk \'{print $3,$4,$5}\''
+        hp_product = commands.getoutput(hp_product_check_command)
+        if hp_product == 'ProLiant DL360p Gen8':
+            hp_raid_info_get_command = "hpssacli ctrl slot=0 pd all show|grep physicaldrive"
+            hp_raid_info = commands.getoutput(hp_raid_info_get_command)
+            hp_raid_info_list = hp_raid_info.split('\n')
+            hp_raid_info_list_index = 0
+            hp_raid_stats_bool = 0
+            error_slot_state = ''
+
+
+
+
+            ## while hp_raid_info_list_index < len(hp_raid_info_list):
+            ##     if (hp_raid_info_list[hp_raid_info_list_index]).split( )[-1] == 'OK)':
+            ##         hp_raid_stats_bool += 0
+            ##     else:
+            ##         hp_error_slot_number = ((hp_raid_info_list[hp_raid_info_list_index]).split( )[4] + ' ' + (hp_raid_info_list[hp_raid_info_list_index]).split( )[5])[2:]
+            ##         hp_error_slot_size = ((hp_raid_info_list[hp_raid_info_list_index]).split( )[7] + ' ' + ((hp_raid_info_list[hp_raid_info_list_index]).split( )[8])[:2])
+            ##         hp_raid_stats_bool += 1
+            ##         error_slot_state = error_slot_state.join(hp_error_slot_number + ' 存在扇区错误, 磁盘容量为' + hp_error_slot_size + '。')
+            ##     hp_raid_info_list_index += 1
+            ## if hp_raid_stats_bool > 0:
+            ##     influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
+            ## return influx_raid_record_fields,error_slot_state
+        elif hp_product == 'ProLiant DL380 Gen9':
+            hp_raid_info_get_command = "hpssacli ctrl slot=0 pd all show|grep physicaldrive"
+            hp_raid_info = commands.getoutput(hp_raid_info_get_command)
+            hp_raid_info_list = hp_raid_info.split('\n')
+            hp_raid_info_list_index = 0
+            hp_raid_stats_bool = 0
+            error_slot_state = ''
+
+
+
+
+
+            
+            ## while hp_raid_info_list_index < len(hp_raid_info_list):
+            ##     if (hp_raid_info_list[hp_raid_info_list_index]).split( )[-1] == 'OK)':
+            ##         hp_raid_stats_bool += 0
+            ##     else:
+            ##         hp_error_slot_number = ((hp_raid_info_list[hp_raid_info_list_index]).split( )[4] + ' ' + (hp_raid_info_list[hp_raid_info_list_index]).split( )[5])[2:]
+            ##         hp_error_slot_size = ((hp_raid_info_list[hp_raid_info_list_index]).split( )[7] + ' ' + ((hp_raid_info_list[hp_raid_info_list_index]).split( )[8])[:2])
+            ##         hp_raid_stats_bool += 1
+            ##         error_slot_state = error_slot_state.join(hp_error_slot_number + ' 存在扇区错误, 磁盘容量为' + hp_error_slot_size + '。')
+            ##     hp_raid_info_list_index += 1
+            ## if hp_raid_stats_bool > 0:
+            ##     influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
+            ## return influx_raid_record_fields,error_slot_state
 ##=====测试输出部分===========================###+=============+####========
 print get_server_raid_card_metrics()[0]
 print ''.join(get_server_raid_card_metrics()[1])
