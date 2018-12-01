@@ -3,7 +3,7 @@
 #@Date    : 2018-11-06 16:43:06
 #@Author  : Kivinsae Fang (fangwei@xindong.com)
 #@QQ      : 1669815117
-#@Version : 0.1.0
+#@Version : 0.3.0
 
 from __future__ import division
 import os
