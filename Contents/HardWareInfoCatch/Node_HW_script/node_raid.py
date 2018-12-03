@@ -21,7 +21,7 @@ def get_server_raid_card_metrics():
         dell_product_check_command = 'dmidecode -t 1 | grep Product'
         dell_product = commands.getoutput(dell_product_check_command)
         ## 当型号是R720或R620的时候==========================================
-        if (dell_product.split( ))[3] == 'R720' or (dell_product.split( ))[3] == 'R620':
+        if (dell_product.split( ))[-1] == 'R720' or (dell_product.split( ))[-1] == 'R620':
             ## "raid_health"对于阵列卡状态的判断
             raid_health_get_command = '/opt/MegaRAID/MegaCli/MegaCli64 -AdpAllInfo -aALL|grep -iE Virtual|awk \'{print $4}\''
             raid_health_info = commands.getoutput(raid_health_get_command)
@@ -53,33 +53,60 @@ def get_server_raid_card_metrics():
                 dell_raid_info_get_command = "/opt/lsi/MegaCLI/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
                 dell_raid_info = commands.getoutput(dell_raid_info_get_command)
                 dell_raid_info_list = dell_raid_info.split('\n')
-            dell_raid_info_list_index = 1 
+            dell_index = 1 
             dell_raid_stats_bool = 0
-            error_slot_state = ''
-            while dell_raid_info_list_index < len(dell_raid_info_list):         ##正确的循环走法，按照行直接判断就行。
-                if (dell_raid_info_list[dell_raid_info_list_index].split( ))[-1] == '0':
-                    dell_raid_stats_bool += 0
+            error_stats_all = []
+            while dell_index < len(dell_raid_info_list):
+                if dell_raid_info_list[dell_index].split(' ')[-1].isdigit() == True:
+                    if dell_raid_info_list[dell_index].split(' ')[-1] == '0':
+                        dell_index += 1
+                        dell_raid_stats_bool += 0
+                        continue
+                    else:
+                        if dell_raid_info_list[dell_index].split(' ')[0] == 'Slot':
+                            dell_index += 1
+                            dell_raid_stats_bool += 0
+                            continue
+                        else:
+                            if dell_raid_info_list[dell_index].split(' ')[0] == 'Media':
+                                dell_raid_stats_bool += 1
+                                dell_slot_size = dell_raid_info_list[dell_index + 2].split(' ')[3] + dell_raid_info_list[dell_index + 2].split(' ')[4]
+                                error_slot_state = dell_raid_info_list[dell_index - 1] + ' 存在坏道错误。磁盘大小为:' + dell_slot_size + '\n'
+				error_stats_all += error_slot_state
+                            else:
+                                dell_raid_stats_bool += 1
+                                dell_slot_size = dell_raid_info_list[dell_index + 1].split(' ')[3] + dell_raid_info_list[dell_index + 1].split(' ')[4]
+                                error_slot_state = dell_raid_info_list[dell_index - 2] + ' 存在其他错误。磁盘大小为:' + dell_slot_size + '\n'
+				error_stats_all += error_slot_state
                 else:
-                    if (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Media':
-                        dell_raid_stats_bool += 1
-                        dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[-1]
-                        error_slot_state = error_slot_state.join(dell_error_slot_number + ' 存在扇区错误。')
-                    elif (dell_raid_info_list[dell_raid_info_list_index].split( ))[0] == 'Other':
-                        dell_raid_stats_bool += 1
-                        dell_error_slot_number = (dell_raid_info_list[dell_raid_info_list_index - 2].split( ))[0] + ' ' + (dell_raid_info_list[dell_raid_info_list_index - 1].split( ))[-1]
-                        error_slot_state = error_slot_state.join(dell_error_slot_number + '存在接触连接错误。')
-                dell_raid_info_list_index += 1
+                    if dell_raid_info_list[dell_index].split(' ')[0] == 'Firmware':
+                        if dell_raid_info_list[dell_index].split(' ')[-1] == 'Up':
+                            dell_index += 1
+                            dell_raid_stats_bool += 0
+                            continue
+                        elif dell_raid_info_list[dell_index].split(' ')[-1] == 'Rebuild':
+                            dell_index += 1
+                            dell_raid_stats_bool += 0
+                            continue
+                        else:
+                            dell_raid_stats_bool += 1
+                            dell_slot_size = dell_raid_info_list[dell_index - 1].split(' ')[3] + dell_raid_info_list[dell_index - 1].split(' ')[4]
+                            error_slot_state = dell_raid_info_list[dell_index - 4] + ' 存在识别错误。磁盘大小为:' + dell_slot_size + '\n'
+			    error_stats_all += error_slot_state
+                    else:
+                        dell_index += 1
+                        continue
+                dell_index += 1
             if dell_raid_stats_bool > 0:
                 influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
-            return influx_raid_record_fields,error_slot_state
+            return influx_raid_record_fields,error_stats_all
         ## 当型号是R610的时候==========================================
         else:
             influx_raid_record_fields["raid_health"] = 1 
             influx_raid_record_fields["nvme_health"] = 1 
             influx_raid_record_fields["physical_disk_health"] = 2           ## 特殊情况物理盘健康指标为2，用来之后作省略判断
-            error_slot_state = '本型号机器无权限或无法获取raid卡相关信息'
-            return influx_raid_record_fields,error_slot_state
-
+            error_stats_all = ['本型号机器无权限或无法获取raid卡相关信息']
+            return influx_raid_record_fields,error_stats_all
 
 ##========================================================================================
     ## 当server时HUAWEI的时候
@@ -110,25 +137,53 @@ def get_server_raid_card_metrics():
         huawei_raid_info_get_command = "/opt/MegaRAID/MegaCli/MegaCli64 -pdlist -a0|grep -iE 'slot|Non Coerced Size|firmware state|Error'"
         huawei_raid_info = commands.getoutput(huawei_raid_info_get_command)
         huawei_raid_info_list = huawei_raid_info.split('\n')
-        huawei_raid_info_list_index = 1
+        huawei_index = 1 
         huawei_raid_stats_bool = 0
-        error_slot_state = ''
-        while huawei_raid_info_list_index < len(huawei_raid_info_list):
-            if (huawei_raid_info_list[huawei_raid_info_list_index].split( ))[-1] == '0':
-                huawei_raid_stats_bool += 0
+        error_stats_all = []
+        while huawei_index < len(huawei_raid_info_list):
+            if huawei_raid_info_list[huawei_index].split(' ')[-1].isdigit() == True:
+                if huawei_raid_info_list[huawei_index].split(' ')[-1] == '0':
+                    huawei_index += 1
+                    huawei_raid_stats_bool += 0
+                    continue
+                else:
+                    if huawei_raid_info_list[huawei_index].split(' ')[0] == 'Slot':
+                        huawei_index += 1
+                        huawei_raid_stats_bool += 0
+                        continue
+                    else:
+                        if huawei_raid_info_list[huawei_index].split(' ')[0] == 'Media':
+                            huawei_raid_stats_bool += 1
+                            huawei_slot_size = huawei_raid_info_list[huawei_index + 2].split(' ')[3] + huawei_raid_info_list[huawei_index + 2].split(' ')[4]
+                            error_slot_state = huawei_raid_info_list[huawei_index - 1] + ' 存在坏道错误。磁盘大小为:' + huawei_slot_size + '\n'
+                            error_stats_all += error_slot_state
+                        else:
+                            huawei_raid_stats_bool += 1
+                            huawei_slot_size = huawei_raid_info_list[huawei_index + 1].split(' ')[3] + huawei_raid_info_list[huawei_index + 1].split(' ')[4]
+                            error_slot_state = huawei_raid_info_list[huawei_index - 2] + ' 存在其他错误。磁盘大小为:' + huawei_slot_size + '\n'
+                            error_stats_all += error_slot_state
             else:
-                if (huawei_raid_info_list[huawei_raid_info_list_index].split( ))[0] == 'Media':
-                    huawei_raid_stats_bool += 1
-                    huawei_error_slot_number = (huawei_raid_info_list[huawei_raid_info_list_index - 1].split( ))[0] + ' ' + (huawei_raid_info_list[huawei_raid_info_list_index - 1].split( ))[-1]
-                    error_slot_state = error_slot_state = huawei_error_slot_number + ' 存在扇区错误。'
-                elif (huawei_raid_info_list[huawei_raid_info_list_index].split( ))[0] == 'Other':
-                    huawei_raid_stats_bool += 1
-                    huawei_error_slot_number = (huawei_raid_info_list[huawei_raid_info_list_index - 2].split( ))[0] + ' ' + (huawei_raid_info_list[huawei_raid_info_list_index - 2].split( ))[-1]
-                    error_slot_state = error_slot_state.join(huawei_error_slot_number + ' 存在接触连接错误。')
-            huawei_raid_info_list_index += 1
+                if huawei_raid_info_list[huawei_index].split(' ')[0] == 'Firmware':
+                    if huawei_raid_info_list[huawei_index].split(' ')[-1] == 'Up':
+                        huawei_index += 1
+                        huawei_raid_stats_bool += 0
+                        continue
+                    elif huawei_raid_info_list[huawei_index].split(' ')[-1] == 'Rebuild':
+                        huawei_index += 1
+                        huawei_raid_stats_bool += 0
+                        continue
+                    else:
+                        huawei_raid_stats_bool += 1
+                        huawei_slot_size = huawei_raid_info_list[huawei_index - 1].split(' ')[3] + huawei_raid_info_list[huawei_index - 1].split(' ')[4]
+                        error_slot_state = huawei_raid_info_list[huawei_index - 4] + ' 存在识别错误。磁盘大小为:' + huawei_slot_size + '\n'
+                        error_stats_all += error_slot_state
+                else:
+                    huawei_index += 1
+                    continue
+            huawei_index += 1
         if huawei_raid_stats_bool > 0:
             influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
-        return influx_raid_record_fields,error_slot_state
+        return influx_raid_record_fields,error_stats_all
 
 ##========================================================================================
     ## 当server是HP的时候，HP比较特殊，需要进/data/然后去具体的每个盘里面，运行dmesg|grep -IE 'I/O error',然后通过获得的dev信息再用lshw去获取slot信息。
@@ -156,7 +211,7 @@ def get_server_raid_card_metrics():
         ## "physical_disk_health"通过raid卡指令判断机械硬盘状态的部分
         hp_product_check_command = 'dmidecode -t 1 | grep Product|awk \'{print $3,$4,$5}\''
         hp_product = commands.getoutput(hp_product_check_command)
-        if hp_product == 'ProLiant DL360p Gen8':
+        if hp_product == 'ProLiant DL360p Gen8' or hp_product == 'ProLiant DL380 Gen9':
             hp_raid_info_get_command = "hpssacli ctrl slot=0 pd all show|grep physicaldrive"
             hp_raid_info = commands.getoutput(hp_raid_info_get_command)
             hp_raid_info_list = hp_raid_info.split('\n')
@@ -175,24 +230,9 @@ def get_server_raid_card_metrics():
             if hp_raid_stats_bool > 0:
                 influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
             return influx_raid_record_fields,error_slot_state
-        elif hp_product == 'ProLiant DL380 Gen9':
-            hp_raid_info_get_command = "hpssacli ctrl slot=0 pd all show|grep physicaldrive"
-            hp_raid_info = commands.getoutput(hp_raid_info_get_command)
-            hp_raid_info_list = hp_raid_info.split('\n')
-            hp_raid_info_list_index = 0
-            hp_raid_stats_bool = 0
-            error_slot_state = ''
-            while hp_raid_info_list_index < len(hp_raid_info_list):
-                if (hp_raid_info_list[hp_raid_info_list_index]).split( )[-1] == 'OK)':
-                    hp_raid_stats_bool += 0
-                else:
-                    hp_error_slot_number = ((hp_raid_info_list[hp_raid_info_list_index]).split( )[4] + ' ' + (hp_raid_info_list[hp_raid_info_list_index]).split( )[5])[2:]
-                    hp_error_slot_size = ((hp_raid_info_list[hp_raid_info_list_index]).split( )[7] + ' ' + ((hp_raid_info_list[hp_raid_info_list_index]).split( )[8])[:2])
-                    hp_raid_stats_bool += 1
-                    error_slot_state = error_slot_state.join(hp_error_slot_number + ' 存在扇区错误, 磁盘容量为' + hp_error_slot_size + '。')
-                hp_raid_info_list_index += 1
-            if hp_raid_stats_bool > 0:
-                influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
+        else:
+            influx_raid_record_fields["physical_disk_health"] = 2
+            error_slot_state = '该型号不支持脚本检测'
             return influx_raid_record_fields,error_slot_state
 
 get_server_raid_card_metrics()
