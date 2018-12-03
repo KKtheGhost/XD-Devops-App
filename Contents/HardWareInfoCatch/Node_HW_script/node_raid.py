@@ -229,11 +229,11 @@ def get_server_raid_card_metrics():
                     error_slot_state = 'slot ' + hp_raid_info_list[hp_index].split(' ')[-5] + '存在错误，磁盘容量为' + hp_slot_size + '。\n'
                     error_stats_all += error_slot_state
                     hp_index += 1
-            return influx_raid_record_fields,error_stats_all
+            return influx_raid_record_fields,error_stats_alls
         else:
             influx_raid_record_fields["physical_disk_health"] = 2
             error_slot_state = '该型号不支持脚本检测'
-            return influx_raid_record_fields,error_stats_all = []
+            return influx_raid_record_fields,error_stats_all
 
 print get_server_raid_card_metrics()[0]
 print ''.join(get_server_raid_card_metrics()[1])
