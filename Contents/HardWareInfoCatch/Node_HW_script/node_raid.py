@@ -215,24 +215,25 @@ def get_server_raid_card_metrics():
             hp_raid_info_get_command = "hpssacli ctrl slot=0 pd all show|grep physicaldrive"
             hp_raid_info = commands.getoutput(hp_raid_info_get_command)
             hp_raid_info_list = hp_raid_info.split('\n')
-            hp_raid_info_list_index = 0
+            hp_index = 0
             hp_raid_stats_bool = 0
-            error_slot_state = ''
-            while hp_raid_info_list_index < len(hp_raid_info_list):
-                if (hp_raid_info_list[hp_raid_info_list_index]).split( )[-1] == 'OK)':
+            error_stats_all = []
+            while hp_index < len(hp_raid_info_list):
+                if hp_raid_info_list[hp_index].split(' ')[-1] == 'OK)':
                     hp_raid_stats_bool += 0
+                    hp_index += 1
+                    continue
                 else:
-                    hp_error_slot_number = ((hp_raid_info_list[hp_raid_info_list_index]).split( )[4] + ' ' + (hp_raid_info_list[hp_raid_info_list_index]).split( )[5])[2:]
-                    hp_error_slot_size = ((hp_raid_info_list[hp_raid_info_list_index]).split( )[7] + ' ' + ((hp_raid_info_list[hp_raid_info_list_index]).split( )[8])[:2])
-                    hp_raid_stats_bool += 1
-                    error_slot_state = error_slot_state.join(hp_error_slot_number + ' 存在扇区错误, 磁盘容量为' + hp_error_slot_size + '。')
-                hp_raid_info_list_index += 1
-            if hp_raid_stats_bool > 0:
-                influx_raid_record_fields["physical_disk_health"] = 0       ## 存在error
-            return influx_raid_record_fields,error_slot_state
+                    hp_raid_stats_bool += 0
+                    hp_slot_size = hp_raid_info_list[hp_index].split(' ')[-3] + ' ' + hp_raid_info_list[hp_index].split(' ')[-2]
+                    error_slot_state = 'slot ' + hp_raid_info_list[hp_index].split(' ')[-5] + '存在错误，磁盘容量为' + hp_slot_size + '。\n'
+                    error_stats_all += error_slot_state
+                    hp_index += 1
+            return influx_raid_record_fields,error_stats_all
         else:
             influx_raid_record_fields["physical_disk_health"] = 2
             error_slot_state = '该型号不支持脚本检测'
-            return influx_raid_record_fields,error_slot_state
+            return influx_raid_record_fields,error_stats_all = []
 
-get_server_raid_card_metrics()
+print get_server_raid_card_metrics()[0]
+print ''.join(get_server_raid_card_metrics()[1])
