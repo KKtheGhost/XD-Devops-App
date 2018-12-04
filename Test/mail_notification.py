@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
  
-import smtplib
-from email.mime.text import MIMEText
 from email.header import Header
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import smtplib
  
 sender = 'XD-Devapp—Daily@runoob.com'
 receivers = ['fangwei@xindong.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
@@ -15,7 +16,6 @@ message['To'] =  Header("方苇", 'utf-8')        # 接收者
  
 subject = '心动运维每日脚本测试'
 message['Subject'] = Header(subject, 'utf-8')
- 
  
 try:
     smtpObj = smtplib.SMTP('localhost')
