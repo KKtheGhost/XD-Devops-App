@@ -9,9 +9,19 @@ import os
 import commands
 ## 导入封装后的功能
 
+def conf_deal(parameter_list):
+    node_conf = open("./nodeconf",'r')
+    
+    pass
+
+def conf_apply(parameter_list):
+    pass
+
+def funcname(self, parameter_list):
+    raise NotImplementedError
+
 if __name__ == '__main__':
     devapp_conf = open('','r')
     current_conf = devapp_conf.conf_deal()
     conf_apply(current_conf)
     return
-
