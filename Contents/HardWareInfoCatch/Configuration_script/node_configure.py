@@ -11,8 +11,7 @@ import commands
 
 def conf_deal(parameter_list):
     node_conf = open("./nodeconf",'r')
-    
-    pass
+
 
 def conf_apply(parameter_list):
     pass
