@@ -3,8 +3,8 @@ zone_list() {
     }
 date_range () {
   FROM=$1
-  TO=$(date -d "$1 1 days" "+%Y%m%d")
-  MATCH=$(echo $2 | sed 's/,/ /g')
+  TO=$2
+  MATCH=$(echo $3 | sed 's/,/ /g')
   n=0
   DAY=$FROM
   while [[ $TO -gt $DAY ]]; do
@@ -25,20 +25,27 @@ date_range () {
 list_all_logs () {
   logname=$1
   startdate=$2
-  starthour=$3
-  endhour=$4
-  sevenday=`date -d $2 +%w`
+  enddate=$3
+  starthour=$4
+  endhour=$5
+  var_date=$startdate
+  var_end_date=`date -d "+1 day $enddate" +%Y%m%d`
+  while [[ $var_date < $var_end_date ]];do
+    addweek=$(eval date -d $var_date +%w)
+    sevenday=$sevenday$addweek","
+    var_date=`date -d "+1 day $var_date" +%Y%m%d`
+  done
   LOG_TEMPLATE=s3://rogame-sea-vault/log/sea/FIELD_ZONE/FIELD_PROGRESS.log.FIELD_DATE-FIELD_HOUR.gz
   ZONES=$(zone_list)
   PROGRESSES=$(bash -c "echo $logname")
-  DATES=$(date_range $startdate $sevenday)
+  DATES=$(date_range $startdate $enddate $sevenday)
   HOURS=$(bash -c "echo {${starthour}..${endhour}}")
   for z in $ZONES;do
     for p in $PROGRESSES;do
         for d in $DATES;do
 	        for h in $HOURS;do
-	            LOG_PATH=$(echo $LOG_TEMPLATE | sed "s+FIELD_ZONE+${z}+g" | sed "s+FIELD_PROGRESS+${p}+g" | sed "s+FIELD_DATE+${d}+g" | sed "s+FIELD_HOUR+${h}+g" )
-	            echo $LOG_PATH
+	          LOG_PATH=$(echo $LOG_TEMPLATE | sed "s+FIELD_ZONE+${z}+g" | sed "s+FIELD_PROGRESS+${p}+g" | sed "s+FIELD_DATE+${d}+g" | sed "s+FIELD_HOUR+${h}+g" )
+	          echo $LOG_PATH
 	        done
         done
     done
