@@ -234,6 +234,6 @@ def get_server_raid_card_metrics():
             influx_raid_record_fields["physical_disk_health"] = 2
             error_slot_state = '该型号不支持脚本检测'
             return influx_raid_record_fields,error_stats_all
-
+##====输出到数据库
 print get_server_raid_card_metrics()[0]
 print ''.join(get_server_raid_card_metrics()[1])

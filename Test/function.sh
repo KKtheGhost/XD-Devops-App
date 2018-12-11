@@ -28,13 +28,6 @@ list_all_logs () {
   enddate=$3
   starthour=$4
   endhour=$5
-  var_date=$startdate
-  var_end_date=`date -d "+1 day $enddate" +%Y%m%d`
-  while [[ $var_date < $var_end_date ]];do
-    addweek=$(eval date -d $var_date +%w)
-    sevenday=$sevenday$addweek","
-    var_date=`date -d "+1 day $var_date" +%Y%m%d`
-  done
   LOG_TEMPLATE=s3://rogame-sea-vault/log/sea/FIELD_ZONE/FIELD_PROGRESS.log.FIELD_DATE-FIELD_HOUR.gz
   ZONES=$(zone_list)
   PROGRESSES=$(bash -c "echo $logname")
