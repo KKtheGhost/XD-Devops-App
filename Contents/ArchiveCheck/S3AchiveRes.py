@@ -37,14 +37,15 @@ def aws_valid_test():
 ##==============================================
 ## 当使用者机器有aws权限时，直接登录获取信息
 def local_aws_get(ip,username,raw_cmd,i):
-    reslist = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist/'+str(i),'w')
+    reslist = open('reslist/'+str(i),'w')
     reslist.seek(0)
     reslist.truncate()
+    hostname = commands.getoutput('whoami')
     try:
         ssh_client = paramiko.SSHClient()
         ssh_client.load_system_host_keys()
         ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        pkey = paramiko.RSAKey.from_private_key_file('/Users/kivinsaefang/.ssh/id_rsa')         ##设定SSH免密登录
+        pkey = paramiko.RSAKey.from_private_key_file('/Users/'+hostname+'/.ssh/id_rsa')         ##设定SSH免密登录
         ssh_client.connect(ip,22,username,pkey=pkey)
         date = datetime.date.today() - datetime.timedelta(days=1)	# 2015-10-29 00:00:00
         date_format = date.strftime('%Y/%m/%d')
@@ -57,17 +58,17 @@ def local_aws_get(ip,username,raw_cmd,i):
 
 ## 本地执行主程序
 def S3read_local():
-    cmdfile = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/ArchiveS3List','r')
+    cmdfile = open('ArchiveS3List','r')
     cmdline = cmdfile.readlines()
-    ip,username = '172.26.0.65','root'              ##通过某一个有S3 read权限的号前往，服务器随意
+    ip,username = '172.26.0.64','root'              ##通过某一个有S3 read权限的号前往，服务器随意
     i = 0
     while i < len(cmdline):
         raw_cmd = (cmdline[i].strip())[16:]
         cmdfile.close()
         local_aws_get(ip,username,raw_cmd,i)
-        out_reslist = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist/'+str(i),'r')
+        out_reslist = open('reslist/'+str(i),'r')
         num_reslist = len(out_reslist.readlines())
-        out_reslist_std = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist_std/'+str(i),'r')
+        out_reslist_std = open('reslist_std/'+str(i),'r')
         num_reslist_std = len(out_reslist_std.readlines())
         if num_reslist == num_reslist_std:
             archive_res = 'Yes! ' + (cmdline[i].strip())[:15] + ' was successfully archived.'
@@ -95,14 +96,15 @@ def S3read_local():
 ##===============================================
 ##当使用者机器没有aws权限时，通过paramiko插件走ssh跳板机
 def remote_aws_acc_get(ip,username,raw_cmd,i):
-    reslist = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist/'+str(i),'w')
+    reslist = open('reslist/'+str(i),'w')
     reslist.seek(0)
     reslist.truncate()
+    hostname = commands.getoutput('whoami')
     try:
         ssh_client = paramiko.SSHClient()
         ssh_client.load_system_host_keys()
         ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        pkey = paramiko.RSAKey.from_private_key_file('/Users/kivinsaefang/.ssh/id_rsa')         ##设定SSH免密登录
+        pkey = paramiko.RSAKey.from_private_key_file('/Users/'+hostname+'/.ssh/id_rsa')         ##设定SSH免密登录
         ssh_client.connect(ip,22,username,pkey=pkey)
         date = datetime.date.today() - datetime.timedelta(days=1)	# 2015-10-29 00:00:00
         date_format = date.strftime('%Y/%m/%d')
@@ -115,17 +117,17 @@ def remote_aws_acc_get(ip,username,raw_cmd,i):
 
 ## devapp跳板主执行函数
 def S3read_remote():
-    cmdfile = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/ArchiveS3List','r')
+    cmdfile = open('ArchiveS3List','r')
     cmdline = cmdfile.readlines()
-    ip,username = '172.26.0.65','root'              ##通过某一个有S3 read权限的号前往，服务器随意
+    ip,username = '172.26.0.64','root'              ##通过某一个有S3 read权限的号前往，服务器随意
     i = 0
     while i < len(cmdline):
         raw_cmd = (cmdline[i].strip())[16:]
         cmdfile.close()
         remote_aws_acc_get(ip,username,raw_cmd,i)
-        out_reslist = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist/'+str(i),'r')
+        out_reslist = open('reslist/'+str(i),'r')
         num_reslist = len(out_reslist.readlines())
-        out_reslist_std = open('/Users/kivinsaefang/Desktop/Devops-app/Contents/ArchiveCheck/reslist_std/'+str(i),'r')
+        out_reslist_std = open('reslist_std/'+str(i),'r')
         num_reslist_std = len(out_reslist_std.readlines())
         if num_reslist == num_reslist_std:
             archive_res = 'Congratulation! ' + (cmdline[i].strip())[:15] + ' has successfully archived.'
