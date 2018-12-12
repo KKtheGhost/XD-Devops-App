@@ -6,7 +6,6 @@
 #@Version : 0.1.0
 
 import paramiko
-import time
 import os
 import sys
 import datetime
